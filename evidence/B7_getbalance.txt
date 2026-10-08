@@ -1,0 +1,2 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalance
+99.99990000

@@ -1,0 +1,2 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin createrawtransaction  '[{"txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f", "vout": 0}]'  '[{"bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw": 10.0}, {"bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks": 39.9999}]'
+02000000019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e00000000

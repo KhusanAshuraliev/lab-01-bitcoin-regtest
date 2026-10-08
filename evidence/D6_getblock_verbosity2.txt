@@ -1,0 +1,103 @@
+$ docker compose exec -T bitcoind bitcoin-cli getblock 55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b 2
+{
+  "hash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+  "confirmations": 1,
+  "height": 103,
+  "version": 536870912,
+  "versionHex": "20000000",
+  "merkleroot": "9c19d26ee57a9f3c517504d1f09c23e918d6a3139a809b6bc0b253eec2ee6ae1",
+  "time": 1791461047,
+  "mediantime": 1791461047,
+  "nonce": 4,
+  "bits": "207fffff",
+  "difficulty": 4.656542373906925e-10,
+  "chainwork": "00000000000000000000000000000000000000000000000000000000000000d0",
+  "nTx": 2,
+  "previousblockhash": "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70",
+  "strippedsize": 295,
+  "size": 440,
+  "weight": 1325,
+  "tx": [
+    {
+      "txid": "9f851afdca9ea1ece950a558177d5d5dc3cd3de9a7f408b82b8ef4c5ddade20b",
+      "hash": "1446bb7722b7068af05e8875e6bcd30e9d9e54b5efbfec73e9b8bc01f87ee0a5",
+      "version": 2,
+      "size": 168,
+      "vsize": 141,
+      "weight": 564,
+      "locktime": 0,
+      "vin": [
+        {
+          "coinbase": "016700",
+          "txinwitness": [
+            "0000000000000000000000000000000000000000000000000000000000000000"
+          ],
+          "sequence": 4294967295
+        }
+      ],
+      "vout": [
+        {
+          "value": 90.00000000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "0 39f3fad7c2548bb19000766ccb9ed947c324a1d8",
+            "desc": "addr(bcrt1q88el447z2j9mryqqwekvh8keglpjfgwc23l87r)#gwe8x79e",
+            "hex": "001439f3fad7c2548bb19000766ccb9ed947c324a1d8",
+            "address": "bcrt1q88el447z2j9mryqqwekvh8keglpjfgwc23l87r",
+            "type": "witness_v0_keyhash"
+          }
+        },
+        {
+          "value": 0.00000000,
+          "n": 1,
+          "scriptPubKey": {
+            "asm": "OP_RETURN aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab01",
+            "desc": "raw(6a24aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab01)#ypu87yr4",
+            "hex": "6a24aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab01",
+            "type": "nulldata"
+          }
+        }
+      ],
+      "hex": "020000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff03016700ffffffff02001a71180200000016001439f3fad7c2548bb19000766ccb9ed947c324a1d80000000000000000266a24aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab010120000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "txid": "1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3",
+      "hash": "c75065b9b2ac774944e795f5413dfab8564b0d378e3066c10b665cdc82917f2a",
+      "version": 2,
+      "size": 191,
+      "vsize": 110,
+      "weight": 437,
+      "locktime": 0,
+      "vin": [
+        {
+          "txid": "66477223acc3063b5b57a367088100efc17eda31019c3636afa26e7bb4b86ea5",
+          "vout": 0,
+          "scriptSig": {
+            "asm": "",
+            "hex": ""
+          },
+          "txinwitness": [
+            "304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb01",
+            "026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f"
+          ],
+          "sequence": 4294967293
+        }
+      ],
+      "vout": [
+        {
+          "value": 10.00000000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "0 deead1c84fe0ac76b35abba7d15a775433efef23",
+            "desc": "addr(bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq)#s9tkt3kp",
+            "hex": "0014deead1c84fe0ac76b35abba7d15a775433efef23",
+            "address": "bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq",
+            "type": "witness_v0_keyhash"
+          }
+        }
+      ],
+      "fee": 40.00000000,
+      "hex": "02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000"
+    }
+  ]
+}

@@ -1,0 +1,1059 @@
+
+==============================================================================
+0. Start a fresh regtest node
+==============================================================================
+
+$ docker compose down -v
+ Container lab01-bitcoind Stopping 
+ Container lab01-bitcoind Stopped 
+ Container lab01-bitcoind Removing 
+ Container lab01-bitcoind Removed 
+ Network lab-01-bitcoin-regtest_default Removing 
+ Volume lab-01-bitcoin-regtest_bitcoin-data Removing 
+ Volume lab-01-bitcoin-regtest_bitcoin-data Removed 
+ Network lab-01-bitcoin-regtest_default Removed
+
+$ docker compose up -d
+ Volume lab-01-bitcoin-regtest_bitcoin-data Creating 
+ Volume lab-01-bitcoin-regtest_bitcoin-data Creating 
+ Network lab-01-bitcoin-regtest_default Creating 
+ Network lab-01-bitcoin-regtest_default Creating 
+ Volume lab-01-bitcoin-regtest_bitcoin-data Created 
+ Volume lab-01-bitcoin-regtest_bitcoin-data Created 
+ Network lab-01-bitcoin-regtest_default Created 
+ Network lab-01-bitcoin-regtest_default Created 
+ Container lab01-bitcoind Creating 
+ Container lab01-bitcoind Created 
+ Container lab01-bitcoind Starting 
+ Container lab01-bitcoind Started
+
+$ docker compose exec -T bitcoind bitcoin-cli getblockchaininfo
+{
+  "chain": "regtest",
+  "blocks": 0,
+  "headers": 0,
+  "bestblockhash": "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206",
+  "difficulty": 4.656542373906925e-10,
+  "time": 1296688602,
+  "mediantime": 1296688602,
+  "verificationprogress": 1,
+  "initialblockdownload": true,
+  "chainwork": "0000000000000000000000000000000000000000000000000000000000000002",
+  "size_on_disk": 293,
+  "pruned": false,
+  "warnings": ""
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli getnetworkinfo
+{
+  "version": 270100,
+  "subversion": "/Satoshi:27.1.0/",
+  "protocolversion": 70016,
+  "localservices": "0000000000000c09",
+  "localservicesnames": [
+    "NETWORK",
+    "WITNESS",
+    "NETWORK_LIMITED",
+    "P2P_V2"
+  ],
+  "localrelay": true,
+  "timeoffset": 0,
+  "networkactive": true,
+  "connections": 0,
+  "connections_in": 0,
+  "connections_out": 0,
+  "networks": [
+    {
+      "name": "ipv4",
+      "limited": false,
+      "reachable": true,
+      "proxy": "",
+      "proxy_randomize_credentials": false
+    },
+    {
+      "name": "ipv6",
+      "limited": false,
+      "reachable": true,
+      "proxy": "",
+      "proxy_randomize_credentials": false
+    },
+    {
+      "name": "onion",
+      "limited": true,
+      "reachable": false,
+      "proxy": "",
+      "proxy_randomize_credentials": false
+    },
+    {
+      "name": "i2p",
+      "limited": true,
+      "reachable": false,
+      "proxy": "",
+      "proxy_randomize_credentials": false
+    },
+    {
+      "name": "cjdns",
+      "limited": true,
+      "reachable": false,
+      "proxy": "",
+      "proxy_randomize_credentials": false
+    }
+  ],
+  "relayfee": 0.00001000,
+  "incrementalfee": 0.00001000,
+  "localaddresses": [
+  ],
+  "warnings": ""
+}
+
+==============================================================================
+1. Setup: wallet lab01, mine 101 blocks
+==============================================================================
+
+$ docker compose exec -T bitcoind bitcoin-cli listwallets
+[
+]
+
+$ docker compose exec -T bitcoind bitcoin-cli loadwallet lab01
+error code: -18
+error message:
+Wallet file verification failed. Failed to load database path '/data/.bitcoin/regtest/wallets/lab01'. Path does not exist.
+
+$ docker compose exec -T bitcoind bitcoin-cli createwallet lab01
+{
+  "name": "lab01"
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getnewaddress mining
+bcrt1qglxvegvg4uvxejuyq3davzxpdtlrc0yrgjc2xr
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -generate 101
+{
+  "address": "bcrt1ql8q39jdahzr6mr4tzkzvgqk5cdps9f9ltn47xk",
+  "blocks": [
+    "48284c607e888c8174aded84ec85a62671870291c4c29234ddb680bb239e0999",
+    "08d96bf4b5cad4cfc230565c01f36b610303525af8aafeed2997a3013f2c71c9",
+    "5f648ab757c1d7a76a64ccfc87e19fe4f9e2475adc2a8d1fbb36fd67058a15c2",
+    "43feb2948adbcfa9fc48be54038bb60c39f9672126a2ebb6838811575b6917c2",
+    "3bcabdc714fec1d03bbc9884bb64f97d4a04a8945d78086a8529f902b1e573fd",
+    "4c35f0ce93f4fe3b05676b33d8c4c5359fe8275531cd558fa8e25bc9f6e57791",
+    "5a418eaf340fb23446a56e9163778d2fe89dd5b889bbecf890e5b6ba4a5a3bd7",
+    "42253bb71750a85c64f364cb93f606091fea865db5067eba781aca6282e10f70",
+    "76714633c973c2c59a57b2249b4ff3d17fe48a5036a369d79d1bd2ead74a6c74",
+    "58d709cbdf5dc6fc828737c07d4cd6930d88ec2862815da26bc6fa8756049474",
+    "126575048272fc5d910ef9fcc9c85353a6f19d73db6e96c93a2b604781c47d58",
+    "44a03b89c9748470b2a89198ca51fd871a3f427b0d3c296567f2a7c201240be6",
+    "28372b320850fd5a73e516bd65a85d0c12177aad15e37810617963ec8cf853d5",
+    "2d722cc3cd533415c58626fea5dea2f6ec2293a911b64c62cb847585a6e152bd",
+    "7fbbe90b3fc466d0899a51817056be692545482d4ddf7837464c48cb7dc35bf3",
+    "59a92c4e602c073fc91730940dc469136c6edc5c30a69b3fb1284215d391d4be",
+    "38c106373765ac0b014d62ed4397300a310dd05db3e6ac57555afca395524fdd",
+    "0ecf388246c762829a99d68ec20ff70374394f973b3ec7b0972719159d5ec46e",
+    "16d83bc6aed692f0ce6607fc89cac46dc127a8f7196c76ff9792a4875c00e8cc",
+    "7fa2a06e232496cea9907fc621044a05c1b8d3974fb2876531894878ff8f977e",
+    "5dfda61155dbb42532a6378e55b578fb33a9175072bac2a0b4bbe05887c68bcc",
+    "764b0373d2b9b4e5411177385bc4e59099e672ebd8da74e72383d70a9b3aa557",
+    "25b83247176829831befd3045f141b4a408935eefb092a5202125824f4c037ad",
+    "34dd2bab7727b0b1d167659b2bc7651fe07df7a8208889e4767a2752239733de",
+    "1ffbbe8e0e7ceff42d4ac688cc03624b4e6394eebea309eb430316ee372d0ab0",
+    "3ae7b7f8e3afdf7061d2e97beb21008c300ae317249bd7b901f04dc75943976c",
+    "44e6f63a00f6d222ca0b2eb7493d0bf8937283b12b9e9350916934c41a0e38ca",
+    "7d527b6f7dbbf8a8256a8ecd99a30687d131c6c6b9d14aff0ba5eca7129a8b1f",
+    "445f3f66e30d727b6f1a6a44e27ec71b170aa568905abacd2765e2edc858ce0b",
+    "47afc672017bbf76746693d7567fdf35e4c21588843a8f4b3e297d01cca5e65c",
+    "587b63e0f2289035ad51df65818883f36ecabdedc2bb5c818a15abc24615bdc0",
+    "32db207cc00b3bd510a164765fbab6b0c284a5e9c187c657adb6dbb0fc1b8927",
+    "29f8ccc864f87c6da9f9b64ffb821a2aa41bb83c537417021a3508995b86aacf",
+    "57e3f4af6cd9d8adc8a63d670912092e9ddcb9e94b7b18849691fb936ba4ebae",
+    "452ec8333b10d9e8c1b2edff7891befb0b620c6130964c7fb91a8f16c89ae160",
+    "27b8c12114417a5cc83ed751e7ecf4a1cf9606e531b8a9d3b87b02d15b78bdb1",
+    "1697d6598c0e045a2f3c14b01780a05bbb9bcd5bcf29ef927f0d0db560044fde",
+    "355e0069bb0590ceb34865a18d5100f72a1fea6caf9a4c16eef2be3de781dbd8",
+    "2dfcde9d195a4d2a68784b13c3998fb156b41ed0029c1da5fe7a08380cb10471",
+    "3b8d2ea9cb3570a3e4cba7dbcf9ad073b12a2457ec51b59a93a9d36dcbf615e5",
+    "45b9534f0d2541aebaa58e214b9f73f501b14a6998dd1870f6f78a820c338fc1",
+    "5191acb4fa9d1dac6e4100f0656b56b7f2c3d884ea4d9ca2d2f1d67785ce5c85",
+    "49add7b3b5cc773fc59b2aacf1abded342ab2fea325999e5f40f0edf61103bca",
+    "7987a3e0aff196cc573ca9f2aa20a87446bbfcd06c589e07839415d4406ad1bb",
+    "01870dfb7e43c921bd876282f368e047cf4691d997b12663cff0324b83ac1697",
+    "7091af8bc19937de9be8e82620d47ac888b3e020da6c2c5dd9dde65ba7d8fd44",
+    "695fc3038e13e54cb8329d3936d8abb99a9bd479737a2a1e795feb63028b4dfc",
+    "6bf3c43224ddabe3a7b4ddea0acc04e6cddbce372589b24a8f345e2a435b76b2",
+    "6666fd991baf357d38aa241f8abe989093073c24f8153e560fada9d365d54f23",
+    "5361bbcc2405bfd885ae04cbab7af3eda9ece979bde2c32afc2b23f7a4bea1d7",
+    "2d5023a82ce38f4df5ff22917810251ea8adcdfa13bd7c8ecbc499327343464a",
+    "679e4f4253ab7f6b0ff4603d949f75e1d5ab0b95d83b2a2e4d2fcf4f3555b826",
+    "5e4b7f64f63e99b63f524e51a3ecb826cf51169b99bfa6b04b21f6dde7df5483",
+    "38071581e001641acb3b4510032f2eda7f4041124f0fc3d5b030ee56539ab4af",
+    "525e722ab1fd3652b8422db53d4ca04e6a257c9964e996382a2cb11de0a4e7ce",
+    "321a11965df5592546c6f12cb4e73ef01b39c43a01dc1b5f7b59a6f3884ba79b",
+    "6967c7353e48aad991de86e065f5652e54294a59c63e52b57b783d7c033dcdfb",
+    "1c9fd7d7eb67ea8c4273924620caf454bea7a560d99e13a7233d47bb8e33dce9",
+    "3f51cf507d59e279b4160d1dd5b05248baf3a789bfd53191950436ad32815e47",
+    "6e828a850531f5845478f2abfc8eb17296d19c44ebd09e591d91a91cc7d21582",
+    "275bbc4225d42c167e3e3573fb75898bedc60cb6bc341f68ecf90bee1d50f38b",
+    "21b508a0036ae76ced26987f9413e04da6183a8e34f6e8d0805a8b2a59f9d86e",
+    "40bbceac5f9cb49e511bf42361e4f9626037377376130f6bc3d9dc016f3ae2b0",
+    "6277cb0623772b1344f94b7ca6750751aafc376a623b1b398f79e62f3887392a",
+    "0ad847002d5cd826be789282148d515c4b36984eaa6288e7e5a561a221665968",
+    "6f35e8955f6e13d387fd7063468f72745c5fce68f157383f26d6aa909d6ac359",
+    "472dbf53cf4a9225e7672746e0e145b9db81fc099376a895587824dd5b290db8",
+    "166e03c241335da9631b8650a36fcb05e9045b27190c6c49ba3ef276789d2663",
+    "22760aa05977a32a6e3e9604860c8df5c8639c5a639947cfca029dc040817b1e",
+    "0ae7e4cc601af39a455fe00bacaec9e04dc8ac1b92ac881be3f8d67b37237aac",
+    "5c0d3d25eec7cde610d3c9bdba9daa4545ce17345d03766b18ea1aa3689ee8f2",
+    "6243dec55cb1707da96e903daa9a724f887191b57be7d0d9206b2ee48ce2d903",
+    "0937a8eb77da735b416c0ab3f80bb202ab389f1a285a55aecacb8780a1144289",
+    "16f5d9feb551bb9723ad34478017aed0f331700b09b9ef513252987f5d8d6dcc",
+    "2dc1bee65de496fb6f6f17d8111f245500f5eaedb0cd0bacff1b2864e23be145",
+    "504188daac9be6b133fb45ede7215899f199ca22d477cf6ea5704c15bfb92c8f",
+    "47f80df7611f42e9d4713998490838b8122277790c829e665496c74c083f34b8",
+    "00433de0c86ccd87d25c71cbf0befbb151337ff921a6bf4653cccdaf3f1735f8",
+    "2b06d4e96be5c7f2d9b8e4bf8bdbe8d973df17ee5e1d006942a72bd58812641f",
+    "47bd01fab2a2fda5ced4f8647d5a3b01f751c9336c73840a54c8ed5b550e581f",
+    "05fe0ff1cc76b359936036e182717e513943474f59e7d0e35cade5f011c45259",
+    "3737836421213c05b427454863072c8264bfd1bbecdb25ae1c50b2d8233998fb",
+    "1ad612ae62d9c42c197c2ed457b89ad751be151c10403d5860d08ddff7b1ca41",
+    "354826b81b90a73497f7c2fdca741d9abb102a2078246807ae311abb33f05698",
+    "7da92cd8185acc855e5c5b4dd3f85ebb4c29ac24e8ded333b1d0fb8ad712094b",
+    "3174e859611e63a17e6913aedb27b1b46ea4212c35997a576c817bf251c33499",
+    "6f9ae1e42f4b6bda221c695fc708573a0f71da79e67696c0eaaef321ffa0569d",
+    "10ac10c18ba9b7cc889fb81457a98f764e5172e170c752316bafa6bdd840e6b9",
+    "2d2de46be91d8682aea43e791b7eb2a19ed7b49d129a9c9d9c67740c16cf612f",
+    "10ff0f48ef9f243ac22e8d02fdd4ffcc2889feeb438d889f53084084f360f415",
+    "0cef8c7efb64193a18f7ce52e3af8593f519f8e85b6b80a1d8311446daf305ce",
+    "605c1cbb92f1dc58d601a9b4488048d069dfa3db97447346106a4e4c241c224d",
+    "4620cff0316ef6bfd48d46d32c3994c789828187af0b51ee0d8adecec7447dc9",
+    "3ba47dfb3d458fff766b5cdb38171ca4a5e74d4dfaf2761c267dd0d52264b2fe",
+    "6049573f7db31e12d89e03b4fa6664e5cb2014dadedc7490c662319012324b3e",
+    "13706098d8acef9ba3d87f22371c4a7661b914581eb07d3ceee8e2e2d18cdf3b",
+    "4bd5af01721630d98c980d79162dd3f2e3d28930bfd1af532b8f5178c6c14b41",
+    "28765dc832b1e84b2ebc10d501638b0fa9f14d6a9337368522ac1f2faba7109c",
+    "63cca28a9a32d225e17ec06461a21be0af46b3a131adac3f02c0b8b15198a68d",
+    "6b74ed9f08e1388cc5d5018181efe1703df7653bdb00bfbbe7d17c5b419c292d",
+    "5c0399b62f6e5620d1ac333b8287864d155f2193ff70f3a5bad01673fc600179"
+  ]
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli getblockcount
+101
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalance
+50.00000000
+
+==============================================================================
+PART A - Observing UTXO state
+==============================================================================
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 listunspent
+[
+  {
+    "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+    "vout": 0,
+    "address": "bcrt1ql8q39jdahzr6mr4tzkzvgqk5cdps9f9ltn47xk",
+    "label": "",
+    "scriptPubKey": "0014f9c112c9bdb887ad8eab1584c402d4c34302a4bf",
+    "amount": 50.00000000,
+    "confirmations": 101,
+    "spendable": true,
+    "solvable": true,
+    "desc": "wpkh([0890d39b/84h/1h/0h/0/1]026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f)#s3n7yq7w",
+    "parent_descs": [
+      "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+    ],
+    "safe": true
+  }
+]
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalances
+{
+  "mine": {
+    "trusted": 50.00000000,
+    "untrusted_pending": 0.00000000,
+    "immature": 5000.00000000
+  },
+  "lastprocessedblock": {
+    "hash": "5c0399b62f6e5620d1ac333b8287864d155f2193ff70f3a5bad01673fc600179",
+    "height": 101
+  }
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli gettxoutsetinfo
+{
+  "height": 101,
+  "bestblock": "5c0399b62f6e5620d1ac333b8287864d155f2193ff70f3a5bad01673fc600179",
+  "txouts": 101,
+  "bogosize": 7272,
+  "hash_serialized_3": "a2c4d0ac5aee3e9cd9cba88c24d917e753f16548988ede69ad9080015d5dc1b3",
+  "total_amount": 5050.00000000,
+  "transactions": 101,
+  "disk_size": 0
+}
+
+==============================================================================
+PART B - Building a raw transaction by hand
+==============================================================================
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 listunspent 100
+[
+  {
+    "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+    "vout": 0,
+    "address": "bcrt1ql8q39jdahzr6mr4tzkzvgqk5cdps9f9ltn47xk",
+    "label": "",
+    "scriptPubKey": "0014f9c112c9bdb887ad8eab1584c402d4c34302a4bf",
+    "amount": 50.00000000,
+    "confirmations": 101,
+    "spendable": true,
+    "solvable": true,
+    "desc": "wpkh([0890d39b/84h/1h/0h/0/1]026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f)#s3n7yq7w",
+    "parent_descs": [
+      "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+    ],
+    "safe": true
+  }
+]
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getnewaddress destination
+bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getnewaddress change
+bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks
+
+# B3: change = 50.00000000 - 10 - 0.0001 = 39.99990000
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin createrawtransaction  '[{"txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f", "vout": 0}]'  '[{"bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw": 10.0}, {"bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks": 39.9999}]'
+  (stdin) [{"txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f", "vout": 0}]
+  (stdin) [{"bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw": 10.0}, {"bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks": 39.9999}]
+02000000019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e00000000
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin signrawtransactionwithwallet  '02000000019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e00000000'
+  (stdin) 02000000019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e00000000
+{
+  "hex": "020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000",
+  "complete": true
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli -stdin decoderawtransaction  '020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000'
+  (stdin) 020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000
+{
+  "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+  "hash": "2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b",
+  "version": 2,
+  "size": 222,
+  "vsize": 141,
+  "weight": 561,
+  "locktime": 0,
+  "vin": [
+    {
+      "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+      "vout": 0,
+      "scriptSig": {
+        "asm": "",
+        "hex": ""
+      },
+      "txinwitness": [
+        "3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be01",
+        "026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f"
+      ],
+      "sequence": 4294967293
+    }
+  ],
+  "vout": [
+    {
+      "value": 10.00000000,
+      "n": 0,
+      "scriptPubKey": {
+        "asm": "0 ad297cc8886ed33d0670dfd43c281b29f8026f98",
+        "desc": "addr(bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw)#6hx2ke6s",
+        "hex": "0014ad297cc8886ed33d0670dfd43c281b29f8026f98",
+        "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw",
+        "type": "witness_v0_keyhash"
+      }
+    },
+    {
+      "value": 39.99990000,
+      "n": 1,
+      "scriptPubKey": {
+        "asm": "0 53dd28846199a1fac74f33c591e0b4d350608b0e",
+        "desc": "addr(bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks)#x76pwk5m",
+        "hex": "001453dd28846199a1fac74f33c591e0b4d350608b0e",
+        "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks",
+        "type": "witness_v0_keyhash"
+      }
+    }
+  ]
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin sendrawtransaction  '020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000'
+  (stdin) 020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000
+398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getrawmempool
+[
+  "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911"
+]
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -generate 1
+{
+  "address": "bcrt1qdv7d0pyrpj0dnf25dmmqnec4ycg93wxvmknvcd",
+  "blocks": [
+    "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70"
+  ]
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getrawmempool
+[
+]
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 gettransaction 398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+{
+  "amount": 0.00000000,
+  "fee": -0.00010000,
+  "confirmations": 1,
+  "blockhash": "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70",
+  "blockheight": 102,
+  "blockindex": 1,
+  "blocktime": 1791461047,
+  "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+  "wtxid": "2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b",
+  "walletconflicts": [
+  ],
+  "time": 1791461030,
+  "timereceived": 1791461030,
+  "bip125-replaceable": "no",
+  "details": [
+    {
+      "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw",
+      "category": "send",
+      "amount": -10.00000000,
+      "label": "destination",
+      "vout": 0,
+      "fee": -0.00010000,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks",
+      "category": "send",
+      "amount": -39.99990000,
+      "label": "change",
+      "vout": 1,
+      "fee": -0.00010000,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw",
+      "parent_descs": [
+        "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+      ],
+      "category": "receive",
+      "amount": 10.00000000,
+      "label": "destination",
+      "vout": 0,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks",
+      "parent_descs": [
+        "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+      ],
+      "category": "receive",
+      "amount": 39.99990000,
+      "label": "change",
+      "vout": 1,
+      "abandoned": false
+    }
+  ],
+  "hex": "020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000",
+  "lastprocessedblock": {
+    "hash": "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70",
+    "height": 102
+  }
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalance
+99.99990000
+
+==============================================================================
+PART C - Parsing the raw format
+==============================================================================
+
+$ python -m txparser <SIGNED_HEX>   # own implementation
+==============================================================================
+FIELD-BY-FIELD BREAKDOWN (offset = byte position in the serialised stream)
+==============================================================================
+offset   len  field                              value
+------------------------------------------------------------------------------
+     0     4  version                            2
+     4     1  marker                             00
+     5     1  flag                               0x01
+     6     1  input count                        1
+     7    32  input[0].prev_txid                 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+    39     4  input[0].prev_vout                 0
+    43     1  input[0].scriptSig length          0
+    44     0  input[0].scriptSig                 
+    44     4  input[0].sequence                  0xfffffffd
+    48     1  output count                       2
+    49     8  output[0].value                    1000000000 sat
+    57     1  output[0].scriptPubKey length      22
+    58    22  output[0].scriptPubKey             0014ad297cc8886ed33d0670dfd43c281b29f8026f98
+    80     8  output[1].value                    3999990000 sat
+    88     1  output[1].scriptPubKey length      22
+    89    22  output[1].scriptPubKey             001453dd28846199a1fac74f33c591e0b4d350608b0e
+   111     1  witness[0] item count              2
+   112     1  witness[0][0] length               71
+   113    71  witness[0][0]                      3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86... (71 bytes)
+   184     1  witness[0][1] length               33
+   185    33  witness[0][1]                      026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f... (33 bytes)
+   218     4  locktime                           0
+
+==============================================================================
+SUMMARY
+==============================================================================
+txid          : 398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+wtxid         : 2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b
+version       : 2
+segwit        : True  (marker 0x00, flag 0x01 at offsets 4-5)
+locktime      : 0  (none)
+size          : 222 bytes
+stripped size : 113 bytes
+weight        : 561 WU  (= 3 x 113 + 222)
+vsize         : 141 vB
+
+INPUTS (1)
+  [0] at offset 7
+      prev txid : 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+      prev vout : 0
+      scriptSig : (empty)
+      sequence  : 0xfffffffd  (RBF signalled, BIP-125)
+      witness   : 2 item(s)
+        [0]  71 bytes  DER signature, sighash 0x01 (SIGHASH_ALL)
+            3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368e... (71 bytes)
+        [1]  33 bytes  compressed public key
+            026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f
+
+OUTPUTS (2)
+  [0] at offset 49
+      value        : 10.00000000 BTC (1000000000 sat)
+      scriptPubKey : 0014ad297cc8886ed33d0670dfd43c281b29f8026f98
+      asm          : OP_0 <ad297cc8886ed33d0670dfd43c281b29f8026f98>
+      type         : p2wpkh
+      address      : bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw
+  [1] at offset 80
+      value        : 39.99990000 BTC (3999990000 sat)
+      scriptPubKey : 001453dd28846199a1fac74f33c591e0b4d350608b0e
+      asm          : OP_0 <53dd28846199a1fac74f33c591e0b4d350608b0e>
+      type         : p2wpkh
+      address      : bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks
+  total output : 4999990000 sat
+
+FEE
+  not computable from this transaction alone. Bitcoin has no fee field:
+  fee = sum(input values) - sum(output values), and input values are not
+  serialised here -- each lives in the output being spent (prev txid:vout).
+  Looking those up requires a node or UTXO set.
+
+$ python -m txparser --json <SIGNED_HEX>
+{
+  "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+  "wtxid": "2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b",
+  "version": 2,
+  "segwit": true,
+  "locktime": 0,
+  "size": 222,
+  "stripped_size": 113,
+  "weight": 561,
+  "vsize": 141,
+  "inputs": [
+    {
+      "offset": 7,
+      "prev_txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+      "prev_vout": 0,
+      "script_sig": "",
+      "sequence": "0xfffffffd",
+      "witness": [
+        "3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be01",
+        "026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "value_sat": 1000000000,
+      "value_btc": "10.00000000",
+      "offset": 49,
+      "script_pubkey": "0014ad297cc8886ed33d0670dfd43c281b29f8026f98",
+      "asm": "OP_0 <ad297cc8886ed33d0670dfd43c281b29f8026f98>",
+      "type": "p2wpkh",
+      "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw"
+    },
+    {
+      "value_sat": 3999990000,
+      "value_btc": "39.99990000",
+      "offset": 80,
+      "script_pubkey": "001453dd28846199a1fac74f33c591e0b4d350608b0e",
+      "asm": "OP_0 <53dd28846199a1fac74f33c591e0b4d350608b0e>",
+      "type": "p2wpkh",
+      "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks"
+    }
+  ]
+}
+
+$ python -m pytest -v   # own implementation
+============================= test session starts ==============================
+platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0 -- /Users/khusanjon/labs/btc-txparser/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/khusanjon/labs/btc-txparser
+configfile: pyproject.toml
+testpaths: tests
+collecting ... collected 91 items
+
+tests/test_extra.py::test_compact_size_exact_encodings[0-00] PASSED      [  1%]
+tests/test_extra.py::test_compact_size_exact_encodings[252-fc] PASSED    [  2%]
+tests/test_extra.py::test_compact_size_exact_encodings[253-fdfd00] PASSED [  3%]
+tests/test_extra.py::test_compact_size_exact_encodings[65535-fdffff] PASSED [  4%]
+tests/test_extra.py::test_compact_size_exact_encodings[65536-fe00000100] PASSED [  5%]
+tests/test_extra.py::test_compact_size_exact_encodings[4294967295-feffffffff] PASSED [  6%]
+tests/test_extra.py::test_compact_size_exact_encodings[4294967296-ff0000000001000000] PASSED [  7%]
+tests/test_extra.py::test_compact_size_exact_encodings[18446744073709551615-ffffffffffffffffff] PASSED [  8%]
+tests/test_extra.py::test_compact_size_nonzero_offset_all_classes[0] PASSED [  9%]
+tests/test_extra.py::test_compact_size_nonzero_offset_all_classes[252] PASSED [ 10%]
+tests/test_extra.py::test_compact_size_nonzero_offset_all_classes[253] PASSED [ 12%]
+tests/test_extra.py::test_compact_size_nonzero_offset_all_classes[65535] PASSED [ 13%]
+tests/test_extra.py::test_compact_size_nonzero_offset_all_classes[65536] PASSED [ 14%]
+tests/test_extra.py::test_compact_size_nonzero_offset_all_classes[4294967295] PASSED [ 15%]
+tests/test_extra.py::test_compact_size_nonzero_offset_all_classes[4294967296] PASSED [ 16%]
+tests/test_extra.py::test_compact_size_non_canonical_rejected[fd0100] PASSED [ 17%]
+tests/test_extra.py::test_compact_size_non_canonical_rejected[fefc000000] PASSED [ 18%]
+tests/test_extra.py::test_compact_size_non_canonical_rejected[ffffff000000000000] PASSED [ 19%]
+tests/test_extra.py::test_compact_size_truncated_rejected[] PASSED       [ 20%]
+tests/test_extra.py::test_compact_size_truncated_rejected[fd] PASSED     [ 21%]
+tests/test_extra.py::test_compact_size_truncated_rejected[fd01] PASSED   [ 23%]
+tests/test_extra.py::test_compact_size_truncated_rejected[fe010000] PASSED [ 24%]
+tests/test_extra.py::test_compact_size_truncated_rejected[ff01] PASSED   [ 25%]
+tests/test_extra.py::test_compact_size_out_of_range PASSED               [ 26%]
+tests/test_extra.py::test_legacy_first_input_at_offset_5 PASSED          [ 27%]
+tests/test_extra.py::test_segwit_first_input_at_offset_7 PASSED          [ 28%]
+tests/test_extra.py::test_first_payment_prev_txid_display_order PASSED   [ 29%]
+tests/test_extra.py::test_field_offsets_are_contiguous PASSED            [ 30%]
+tests/test_extra.py::test_part_b_shape_sizes_match_lab_expectations PASSED [ 31%]
+tests/test_extra.py::test_p2sh_classification_disassembly_and_address PASSED [ 32%]
+tests/test_extra.py::test_p2wsh_classification_and_bip173_vector PASSED  [ 34%]
+tests/test_extra.py::test_p2wpkh_disassembly PASSED                      [ 35%]
+tests/test_extra.py::test_p2tr_bip350_vector PASSED                      [ 36%]
+tests/test_extra.py::test_p2pk_compressed PASSED                         [ 37%]
+tests/test_extra.py::test_bare_multisig PASSED                           [ 38%]
+tests/test_extra.py::test_nulldata_payload_and_disassembly PASSED        [ 39%]
+tests/test_extra.py::test_nonstandard_and_truncated_push PASSED          [ 40%]
+tests/test_extra.py::test_pushdata_variants PASSED                       [ 41%]
+tests/test_extra.py::test_base58_leading_zero_bytes PASSED               [ 42%]
+tests/test_extra.py::test_pure_python_ripemd160_vectors[-9c1185a5c5e9fc54612808977ee8f548b2258d31] PASSED [ 43%]
+tests/test_extra.py::test_pure_python_ripemd160_vectors[abc-8eb208f7e05d987a9b044a8e98c6b087f15a0bfc] PASSED [ 45%]
+tests/test_extra.py::test_pure_python_ripemd160_vectors[message digest-5d0689ef49d2fae572b881b123a85ffa21595f36] PASSED [ 46%]
+tests/test_extra.py::test_pure_python_ripemd160_vectors[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-aa69deee9a8922e92f8105e007f76110f381e9cf] PASSED [ 47%]
+tests/test_extra.py::test_truncation_anywhere_is_rejected[2] PASSED      [ 48%]
+tests/test_extra.py::test_truncation_anywhere_is_rejected[8] PASSED      [ 49%]
+tests/test_extra.py::test_truncation_anywhere_is_rejected[10] PASSED     [ 50%]
+tests/test_extra.py::test_truncation_anywhere_is_rejected[100] PASSED    [ 51%]
+tests/test_extra.py::test_truncation_anywhere_is_rejected[150] PASSED    [ 52%]
+tests/test_extra.py::test_truncation_anywhere_is_rejected[300] PASSED    [ 53%]
+tests/test_extra.py::test_trailing_bytes_segwit PASSED                   [ 54%]
+tests/test_extra.py::test_bad_hex_rejected[] PASSED                      [ 56%]
+tests/test_extra.py::test_bad_hex_rejected[   ] PASSED                   [ 57%]
+tests/test_extra.py::test_bad_hex_rejected[abc] PASSED                   [ 58%]
+tests/test_extra.py::test_bad_hex_rejected[zz] PASSED                    [ 59%]
+tests/test_extra.py::test_bad_hex_rejected[0x0100] PASSED                [ 60%]
+tests/test_extra.py::test_invalid_segwit_flag_rejected PASSED            [ 61%]
+tests/test_extra.py::test_whitespace_and_quotes_tolerated PASSED         [ 62%]
+tests/test_extra.py::test_hashlib_and_fallback_agree PASSED              [ 63%]
+tests/test_extra.py::test_cli_report PASSED                              [ 64%]
+tests/test_extra.py::test_cli_error_exit_code PASSED                     [ 65%]
+tests/test_parser.py::test_compact_size_roundtrip[0-1] PASSED            [ 67%]
+tests/test_parser.py::test_compact_size_roundtrip[252-1] PASSED          [ 68%]
+tests/test_parser.py::test_compact_size_roundtrip[253-3] PASSED          [ 69%]
+tests/test_parser.py::test_compact_size_roundtrip[65535-3] PASSED        [ 70%]
+tests/test_parser.py::test_compact_size_roundtrip[65536-5] PASSED        [ 71%]
+tests/test_parser.py::test_compact_size_roundtrip[4294967295-5] PASSED   [ 72%]
+tests/test_parser.py::test_compact_size_roundtrip[4294967296-9] PASSED   [ 73%]
+tests/test_parser.py::test_compact_size_offset_is_respected PASSED       [ 74%]
+tests/test_parser.py::test_genesis_coinbase_fields PASSED                [ 75%]
+tests/test_parser.py::test_genesis_txid_is_recomputed_correctly PASSED   [ 76%]
+tests/test_parser.py::test_first_payment_fields PASSED                   [ 78%]
+tests/test_parser.py::test_legacy_txid_equals_wtxid PASSED               [ 79%]
+tests/test_parser.py::test_reserialisation_is_byte_identical[01000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4d04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e206272696e6b206f66207365636f6e64206261696c6f757420666f722062616e6b73ffffffff0100f2052a01000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000] PASSED [ 80%]
+tests/test_parser.py::test_reserialisation_is_byte_identical[0100000001c997a5e56e104102fa209c6a852dd90660a20b2d9c352423edce25857fcd3704000000004847304402204e45e16932b8af514961a1d3a1a25fdf3f4f7732e9d624c6c61548ab5fb8cd410220181522ec8eca07de4860a4acdd12909d831cc56cbbac4622082221a8768d1d0901ffffffff0200ca9a3b00000000434104ae1a62fe09c5f51b13905f07f06b99a2f7159b2225f374cd378d71302fa28414e7aab37397f554a7df5f142c21c1b7303b8a0626f1baded5c72a704f7e6cd84cac00286bee0000000043410411db93e1dcdb8a016b49840f8c53bc1eb68a382e97b1482ecad7b148a6909a5cb2e0eaddfb84ccf9744464f82e160bfa9b8b64f9d4c03f999b8643f656b412a3ac00000000] PASSED [ 81%]
+tests/test_parser.py::test_segwit_marker_and_flag_are_detected PASSED    [ 82%]
+tests/test_parser.py::test_segwit_witness_stack_is_parsed PASSED         [ 83%]
+tests/test_parser.py::test_segwit_txid_differs_from_wtxid PASSED         [ 84%]
+tests/test_parser.py::test_segwit_reserialisation_is_byte_identical PASSED [ 85%]
+tests/test_parser.py::test_segwit_weight_discount PASSED                 [ 86%]
+tests/test_parser.py::test_genesis_output_is_p2pk PASSED                 [ 87%]
+tests/test_parser.py::test_genesis_address_matches_known_value PASSED    [ 89%]
+tests/test_parser.py::test_hash160_known_vector PASSED                   [ 90%]
+tests/test_parser.py::test_bech32_bip173_vector PASSED                   [ 91%]
+tests/test_parser.py::test_p2wpkh_classification_and_regtest_address PASSED [ 92%]
+tests/test_parser.py::test_p2tr_uses_bech32m_and_witness_version_one PASSED [ 93%]
+tests/test_parser.py::test_p2pkh_classification PASSED                   [ 94%]
+tests/test_parser.py::test_disassembly_of_p2pkh PASSED                   [ 95%]
+tests/test_parser.py::test_nulldata_has_no_address PASSED                [ 96%]
+tests/test_parser.py::test_truncated_input_is_rejected PASSED            [ 97%]
+tests/test_parser.py::test_trailing_bytes_are_rejected PASSED            [ 98%]
+tests/test_parser.py::test_non_hex_input_is_rejected PASSED              [100%]
+
+============================== 91 passed in 0.04s ==============================
+
+$ uv sync
+warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+Using CPython 3.12.0 interpreter at: /Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+Creating virtual environment at: .venv
+Resolved 8 packages in 0.70ms
+Downloading ruff (9.4MiB)
+ Downloading ruff
+Prepared 2 packages in 4.29s
+Installed 6 packages in 19ms
+ + iniconfig==2.3.0
+ + packaging==26.3
+ + pluggy==1.6.0
+ + pygments==2.21.0
+ + pytest==9.1.1
+ + ruff==0.16.5
+
+$ uv run python -m txparser <SIGNED_HEX>   # reference
+------------------------------------------------------------------------------
+TRANSACTION
+------------------------------------------------------------------------------
+  txid            : 398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+  wtxid           : 2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b
+  version         : 2
+  segwit          : True
+  locktime        : 0  (no timelock)
+  size            : 222 bytes
+  stripped size   : 113 bytes  (witness excluded)
+  weight          : 561 WU
+  virtual size    : 141 vbytes  (fee rates are quoted per vbyte)
+
+------------------------------------------------------------------------------
+INPUTS (1)
+------------------------------------------------------------------------------
+  [0] byte offset 7
+      prev txid     : 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+      prev vout     : 0
+      scriptSig     : 0 bytes
+      sequence      : 0xfffffffd  (RBF signalled, BIP-125)
+      witness       : 2 stack item(s)
+        [0] (71 B) 3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be01
+        [1] (33 B) 026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f
+
+------------------------------------------------------------------------------
+OUTPUTS (2)
+------------------------------------------------------------------------------
+  [0] byte offset 49
+      value         : 10.00000000 BTC  (1000000000 sat)
+      type          : p2wpkh
+      address       : bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw   [regtest]
+      scriptPubKey  : 22 bytes
+                      OP_0
+                      <ad297cc8886ed33d0670dfd43c281b29f8026f98>
+
+  [1] byte offset 80
+      value         : 39.99990000 BTC  (3999990000 sat)
+      type          : p2wpkh
+      address       : bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks   [regtest]
+      scriptPubKey  : 22 bytes
+                      OP_0
+                      <53dd28846199a1fac74f33c591e0b4d350608b0e>
+
+------------------------------------------------------------------------------
+TOTALS
+------------------------------------------------------------------------------
+  sum of outputs  : 4999990000 sat
+
+  The FEE is not a field in this structure. It is
+      sum(inputs) - sum(outputs)
+  and the input values live in the outputs being spent, which are not
+  part of this transaction. To compute the fee you must look up each
+  previous output -- for example with:
+      bitcoin-cli gettxout <prev_txid> <prev_vout>
+------------------------------------------------------------------------------
+warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+
+$ uv run pytest -v   # reference
+============================= test session starts ==============================
+platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/khusanjon/labs/OE_BLOCKCHAIN/Labs/lab-01-bitcoin-regtest/txparser
+configfile: pyproject.toml
+testpaths: tests
+collected 31 items
+
+tests/test_parser.py ...............................                     [100%]
+
+============================== 31 passed in 0.03s ==============================
+warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+
+# automatic comparison with the node:
+{
+  "txid == sendrawtransaction": true,
+  "wtxid == decoderawtransaction.hash": true,
+  "size": [
+    222,
+    222
+  ],
+  "vsize": [
+    141,
+    141
+  ],
+  "weight": [
+    561,
+    561
+  ],
+  "stripped_size": 113,
+  "segwit": true,
+  "input0_offset": 7,
+  "prev_txid == input": true,
+  "sequence": "0xfffffffd",
+  "witness_item_lengths": [
+    71,
+    33
+  ],
+  "outputs": [
+    [
+      "10.00000000",
+      "p2wpkh",
+      "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw"
+    ],
+    [
+      "39.99990000",
+      "p2wpkh",
+      "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks"
+    ]
+  ]
+}
+
+==============================================================================
+PART D - The deliberate mistake (no change output)
+==============================================================================
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 listunspent 100
+[
+  {
+    "txid": "66477223acc3063b5b57a367088100efc17eda31019c3636afa26e7bb4b86ea5",
+    "vout": 0,
+    "address": "bcrt1ql8q39jdahzr6mr4tzkzvgqk5cdps9f9ltn47xk",
+    "label": "",
+    "scriptPubKey": "0014f9c112c9bdb887ad8eab1584c402d4c34302a4bf",
+    "amount": 50.00000000,
+    "confirmations": 101,
+    "spendable": true,
+    "solvable": true,
+    "desc": "wpkh([0890d39b/84h/1h/0h/0/1]026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f)#s3n7yq7w",
+    "parent_descs": [
+      "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+    ],
+    "safe": true
+  }
+]
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getnewaddress destination-d
+bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin createrawtransaction  '[{"txid": "66477223acc3063b5b57a367088100efc17eda31019c3636afa26e7bb4b86ea5", "vout": 0}]'  '[{"bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq": 10.0}]'
+  (stdin) [{"txid": "66477223acc3063b5b57a367088100efc17eda31019c3636afa26e7bb4b86ea5", "vout": 0}]
+  (stdin) [{"bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq": 10.0}]
+0200000001a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef2300000000
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin signrawtransactionwithwallet  '0200000001a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef2300000000'
+  (stdin) 0200000001a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef2300000000
+{
+  "hex": "02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000",
+  "complete": true
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin sendrawtransaction  '02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000'
+  (stdin) 02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000
+error code: -25
+error message:
+Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -stdin sendrawtransaction  '02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000'  '0'
+  (stdin) 02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000
+  (stdin) 0
+1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -generate 1
+{
+  "address": "bcrt1q88el447z2j9mryqqwekvh8keglpjfgwc23l87r",
+  "blocks": [
+    "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b"
+  ]
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli getblock 55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b 2
+{
+  "hash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+  "confirmations": 1,
+  "height": 103,
+  "version": 536870912,
+  "versionHex": "20000000",
+  "merkleroot": "9c19d26ee57a9f3c517504d1f09c23e918d6a3139a809b6bc0b253eec2ee6ae1",
+  "time": 1791461047,
+  "mediantime": 1791461047,
+  "nonce": 4,
+  "bits": "207fffff",
+  "difficulty": 4.656542373906925e-10,
+  "chainwork": "00000000000000000000000000000000000000000000000000000000000000d0",
+  "nTx": 2,
+  "previousblockhash": "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70",
+  "strippedsize": 295,
+  "size": 440,
+  "weight": 1325,
+  "tx": [
+    {
+      "txid": "9f851afdca9ea1ece950a558177d5d5dc3cd3de9a7f408b82b8ef4c5ddade20b",
+      "hash": "1446bb7722b7068af05e8875e6bcd30e9d9e54b5efbfec73e9b8bc01f87ee0a5",
+      "version": 2,
+      "size": 168,
+      "vsize": 141,
+      "weight": 564,
+      "locktime": 0,
+      "vin": [
+        {
+          "coinbase": "016700",
+          "txinwitness": [
+            "0000000000000000000000000000000000000000000000000000000000000000"
+          ],
+          "sequence": 4294967295
+        }
+      ],
+      "vout": [
+        {
+          "value": 90.00000000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "0 39f3fad7c2548bb19000766ccb9ed947c324a1d8",
+            "desc": "addr(bcrt1q88el447z2j9mryqqwekvh8keglpjfgwc23l87r)#gwe8x79e",
+            "hex": "001439f3fad7c2548bb19000766ccb9ed947c324a1d8",
+            "address": "bcrt1q88el447z2j9mryqqwekvh8keglpjfgwc23l87r",
+            "type": "witness_v0_keyhash"
+          }
+        },
+        {
+          "value": 0.00000000,
+          "n": 1,
+          "scriptPubKey": {
+            "asm": "OP_RETURN aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab01",
+            "desc": "raw(6a24aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab01)#ypu87yr4",
+            "hex": "6a24aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab01",
+            "type": "nulldata"
+          }
+        }
+      ],
+      "hex": "020000000001010000000000000000000000000000000000000000000000000000000000000000ffffffff03016700ffffffff02001a71180200000016001439f3fad7c2548bb19000766ccb9ed947c324a1d80000000000000000266a24aa21a9ed6da2076bb0f2b2c4fcb6e8f6a6cf4aa3038445dd36d79134b99d8f9e633aab010120000000000000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "txid": "1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3",
+      "hash": "c75065b9b2ac774944e795f5413dfab8564b0d378e3066c10b665cdc82917f2a",
+      "version": 2,
+      "size": 191,
+      "vsize": 110,
+      "weight": 437,
+      "locktime": 0,
+      "vin": [
+        {
+          "txid": "66477223acc3063b5b57a367088100efc17eda31019c3636afa26e7bb4b86ea5",
+          "vout": 0,
+          "scriptSig": {
+            "asm": "",
+            "hex": ""
+          },
+          "txinwitness": [
+            "304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb01",
+            "026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f"
+          ],
+          "sequence": 4294967293
+        }
+      ],
+      "vout": [
+        {
+          "value": 10.00000000,
+          "n": 0,
+          "scriptPubKey": {
+            "asm": "0 deead1c84fe0ac76b35abba7d15a775433efef23",
+            "desc": "addr(bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq)#s9tkt3kp",
+            "hex": "0014deead1c84fe0ac76b35abba7d15a775433efef23",
+            "address": "bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq",
+            "type": "witness_v0_keyhash"
+          }
+        }
+      ],
+      "fee": 40.00000000,
+      "hex": "02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000"
+    }
+  ]
+}
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 gettransaction 1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3
+{
+  "amount": 0.00000000,
+  "fee": -40.00000000,
+  "confirmations": 1,
+  "blockhash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+  "blockheight": 103,
+  "blockindex": 1,
+  "blocktime": 1791461047,
+  "txid": "1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3",
+  "wtxid": "c75065b9b2ac774944e795f5413dfab8564b0d378e3066c10b665cdc82917f2a",
+  "walletconflicts": [
+  ],
+  "time": 1791461037,
+  "timereceived": 1791461037,
+  "bip125-replaceable": "no",
+  "details": [
+    {
+      "address": "bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq",
+      "category": "send",
+      "amount": -10.00000000,
+      "label": "destination-d",
+      "vout": 0,
+      "fee": -40.00000000,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq",
+      "parent_descs": [
+        "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+      ],
+      "category": "receive",
+      "amount": 10.00000000,
+      "label": "destination-d",
+      "vout": 0,
+      "abandoned": false
+    }
+  ],
+  "hex": "02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000",
+  "lastprocessedblock": {
+    "hash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+    "height": 103
+  }
+}
+
+==============================================================================
+Final state
+==============================================================================
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalance
+109.99990000
+
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalances
+{
+  "mine": {
+    "trusted": 109.99990000,
+    "untrusted_pending": 0.00000000,
+    "immature": 5040.00010000
+  },
+  "lastprocessedblock": {
+    "hash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+    "height": 103
+  }
+}
+
+Evidence written to: /Users/khusanjon/labs/btc-txparser/evidence

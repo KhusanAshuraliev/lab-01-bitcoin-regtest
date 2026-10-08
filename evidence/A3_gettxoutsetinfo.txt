@@ -1,0 +1,11 @@
+$ docker compose exec -T bitcoind bitcoin-cli gettxoutsetinfo
+{
+  "height": 101,
+  "bestblock": "5c0399b62f6e5620d1ac333b8287864d155f2193ff70f3a5bad01673fc600179",
+  "txouts": 101,
+  "bogosize": 7272,
+  "hash_serialized_3": "a2c4d0ac5aee3e9cd9cba88c24d917e753f16548988ede69ad9080015d5dc1b3",
+  "total_amount": 5050.00000000,
+  "transactions": 101,
+  "disk_size": 0
+}

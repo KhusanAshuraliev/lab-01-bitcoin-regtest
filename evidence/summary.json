@@ -1,0 +1,120 @@
+{
+  "node_version": "/Satoshi:27.1.0/",
+  "mining_address": "bcrt1qglxvegvg4uvxejuyq3davzxpdtlrc0yrgjc2xr",
+  "height_after_setup": 101,
+  "balance_after_setup": "50.00000000",
+  "A": {
+    "listunspent_count": 1,
+    "mature_utxo": {
+      "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+      "vout": "0",
+      "amount": "50.00000000",
+      "confirmations": "101",
+      "spendable": "True"
+    },
+    "trusted": "50.00000000",
+    "immature": "5000.00000000",
+    "txoutset_height": 101,
+    "txouts": 101,
+    "total_amount": "5050.00000000"
+  },
+  "B": {
+    "input": {
+      "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+      "vout": 0,
+      "amount": "50.00000000"
+    },
+    "destination": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw",
+    "change_address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks",
+    "computed_change": "39.99990000",
+    "chosen_fee": "0.0001",
+    "sign_complete": true,
+    "signed_hex_len": 444,
+    "decoded": {
+      "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+      "hash": "2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b",
+      "size": 222,
+      "vsize": 141,
+      "weight": 561,
+      "version": 2,
+      "locktime": 0
+    },
+    "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+    "in_mempool_before_mining": true,
+    "mempool_after": [],
+    "block": "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70",
+    "gettransaction_fee": "-0.00010000",
+    "confirmations": 1,
+    "fee_matches": true,
+    "fee_rate_sat_vb": 70.92,
+    "balance_after": "99.99990000"
+  },
+  "C": {
+    "txid == sendrawtransaction": true,
+    "wtxid == decoderawtransaction.hash": true,
+    "size": [
+      222,
+      222
+    ],
+    "vsize": [
+      141,
+      141
+    ],
+    "weight": [
+      561,
+      561
+    ],
+    "stripped_size": 113,
+    "segwit": true,
+    "input0_offset": 7,
+    "prev_txid == input": true,
+    "sequence": "0xfffffffd",
+    "witness_item_lengths": [
+      71,
+      33
+    ],
+    "outputs": [
+      [
+        "10.00000000",
+        "p2wpkh",
+        "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw"
+      ],
+      [
+        "39.99990000",
+        "p2wpkh",
+        "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks"
+      ]
+    ]
+  },
+  "D": {
+    "input": {
+      "txid": "66477223acc3063b5b57a367088100efc17eda31019c3636afa26e7bb4b86ea5",
+      "vout": 0,
+      "amount": "50.00000000"
+    },
+    "destination": "bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq",
+    "first_send_error": "error code: -25\nerror message:\nFee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)",
+    "txid": "1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3",
+    "blockhash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+    "block_height": 103,
+    "coinbase_vout": [
+      {
+        "value": "90.00000000",
+        "type": "witness_v0_keyhash",
+        "address": "bcrt1q88el447z2j9mryqqwekvh8keglpjfgwc23l87r"
+      },
+      {
+        "value": "0E-8",
+        "type": "nulldata",
+        "address": null
+      }
+    ],
+    "own_tx_index": 1,
+    "own_tx_vout": [
+      "10.00000000"
+    ],
+    "gettransaction_fee": "-40.00000000",
+    "own_parser_txid_matches": true
+  },
+  "final_balance": "109.99990000"
+}

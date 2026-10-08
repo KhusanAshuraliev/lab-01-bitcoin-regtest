@@ -1,0 +1,74 @@
+$ python -m txparser <SIGNED_HEX>   # own implementation
+==============================================================================
+FIELD-BY-FIELD BREAKDOWN (offset = byte position in the serialised stream)
+==============================================================================
+offset   len  field                              value
+------------------------------------------------------------------------------
+     0     4  version                            2
+     4     1  marker                             00
+     5     1  flag                               0x01
+     6     1  input count                        1
+     7    32  input[0].prev_txid                 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+    39     4  input[0].prev_vout                 0
+    43     1  input[0].scriptSig length          0
+    44     0  input[0].scriptSig                 
+    44     4  input[0].sequence                  0xfffffffd
+    48     1  output count                       2
+    49     8  output[0].value                    1000000000 sat
+    57     1  output[0].scriptPubKey length      22
+    58    22  output[0].scriptPubKey             0014ad297cc8886ed33d0670dfd43c281b29f8026f98
+    80     8  output[1].value                    3999990000 sat
+    88     1  output[1].scriptPubKey length      22
+    89    22  output[1].scriptPubKey             001453dd28846199a1fac74f33c591e0b4d350608b0e
+   111     1  witness[0] item count              2
+   112     1  witness[0][0] length               71
+   113    71  witness[0][0]                      3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86... (71 bytes)
+   184     1  witness[0][1] length               33
+   185    33  witness[0][1]                      026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f... (33 bytes)
+   218     4  locktime                           0
+
+==============================================================================
+SUMMARY
+==============================================================================
+txid          : 398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+wtxid         : 2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b
+version       : 2
+segwit        : True  (marker 0x00, flag 0x01 at offsets 4-5)
+locktime      : 0  (none)
+size          : 222 bytes
+stripped size : 113 bytes
+weight        : 561 WU  (= 3 x 113 + 222)
+vsize         : 141 vB
+
+INPUTS (1)
+  [0] at offset 7
+      prev txid : 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+      prev vout : 0
+      scriptSig : (empty)
+      sequence  : 0xfffffffd  (RBF signalled, BIP-125)
+      witness   : 2 item(s)
+        [0]  71 bytes  DER signature, sighash 0x01 (SIGHASH_ALL)
+            3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368e... (71 bytes)
+        [1]  33 bytes  compressed public key
+            026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f
+
+OUTPUTS (2)
+  [0] at offset 49
+      value        : 10.00000000 BTC (1000000000 sat)
+      scriptPubKey : 0014ad297cc8886ed33d0670dfd43c281b29f8026f98
+      asm          : OP_0 <ad297cc8886ed33d0670dfd43c281b29f8026f98>
+      type         : p2wpkh
+      address      : bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw
+  [1] at offset 80
+      value        : 39.99990000 BTC (3999990000 sat)
+      scriptPubKey : 001453dd28846199a1fac74f33c591e0b4d350608b0e
+      asm          : OP_0 <53dd28846199a1fac74f33c591e0b4d350608b0e>
+      type         : p2wpkh
+      address      : bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks
+  total output : 4999990000 sat
+
+FEE
+  not computable from this transaction alone. Bitcoin has no fee field:
+  fee = sum(input values) - sum(output values), and input values are not
+  serialised here -- each lives in the output being spent (prev txid:vout).
+  Looking those up requires a node or UTXO set.

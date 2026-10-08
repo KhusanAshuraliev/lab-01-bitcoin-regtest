@@ -1,0 +1,44 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 gettransaction 1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3
+{
+  "amount": 0.00000000,
+  "fee": -40.00000000,
+  "confirmations": 1,
+  "blockhash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+  "blockheight": 103,
+  "blockindex": 1,
+  "blocktime": 1791461047,
+  "txid": "1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3",
+  "wtxid": "c75065b9b2ac774944e795f5413dfab8564b0d378e3066c10b665cdc82917f2a",
+  "walletconflicts": [
+  ],
+  "time": 1791461037,
+  "timereceived": 1791461037,
+  "bip125-replaceable": "no",
+  "details": [
+    {
+      "address": "bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq",
+      "category": "send",
+      "amount": -10.00000000,
+      "label": "destination-d",
+      "vout": 0,
+      "fee": -40.00000000,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1qmm4drjz0uzk8dv66hwnazknh2se7lmerflhjwq",
+      "parent_descs": [
+        "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+      ],
+      "category": "receive",
+      "amount": 10.00000000,
+      "label": "destination-d",
+      "vout": 0,
+      "abandoned": false
+    }
+  ],
+  "hex": "02000000000101a56eb8b47b6ea2af36369c0131da7ec1ef00810867a3575b3b06c3ac237247660000000000fdffffff0100ca9a3b00000000160014deead1c84fe0ac76b35abba7d15a775433efef230247304402205436214822614a2f0e8753076753d400bca0b608520bda5e01551e83b913e88a022033ccc3410d07eb0a9076932c31e7156f3a3ee56ccbe5704b78235c19e28a77bb0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000",
+  "lastprocessedblock": {
+    "hash": "55a067a983a8a81e2094461149c65c93263ebd3bf6b18cd97d8c43f4b8c1030b",
+    "height": 103
+  }
+}

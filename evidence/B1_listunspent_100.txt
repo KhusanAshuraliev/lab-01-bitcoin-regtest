@@ -1,0 +1,19 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 listunspent 100
+[
+  {
+    "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+    "vout": 0,
+    "address": "bcrt1ql8q39jdahzr6mr4tzkzvgqk5cdps9f9ltn47xk",
+    "label": "",
+    "scriptPubKey": "0014f9c112c9bdb887ad8eab1584c402d4c34302a4bf",
+    "amount": 50.00000000,
+    "confirmations": 101,
+    "spendable": true,
+    "solvable": true,
+    "desc": "wpkh([0890d39b/84h/1h/0h/0/1]026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f)#s3n7yq7w",
+    "parent_descs": [
+      "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+    ],
+    "safe": true
+  }
+]

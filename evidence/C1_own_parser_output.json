@@ -1,0 +1,45 @@
+$ python -m txparser --json <SIGNED_HEX>
+{
+  "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+  "wtxid": "2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b",
+  "version": 2,
+  "segwit": true,
+  "locktime": 0,
+  "size": 222,
+  "stripped_size": 113,
+  "weight": 561,
+  "vsize": 141,
+  "inputs": [
+    {
+      "offset": 7,
+      "prev_txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+      "prev_vout": 0,
+      "script_sig": "",
+      "sequence": "0xfffffffd",
+      "witness": [
+        "3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be01",
+        "026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "value_sat": 1000000000,
+      "value_btc": "10.00000000",
+      "offset": 49,
+      "script_pubkey": "0014ad297cc8886ed33d0670dfd43c281b29f8026f98",
+      "asm": "OP_0 <ad297cc8886ed33d0670dfd43c281b29f8026f98>",
+      "type": "p2wpkh",
+      "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw"
+    },
+    {
+      "value_sat": 3999990000,
+      "value_btc": "39.99990000",
+      "offset": 80,
+      "script_pubkey": "001453dd28846199a1fac74f33c591e0b4d350608b0e",
+      "asm": "OP_0 <53dd28846199a1fac74f33c591e0b4d350608b0e>",
+      "type": "p2wpkh",
+      "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 -generate 1
+{
+  "address": "bcrt1qdv7d0pyrpj0dnf25dmmqnec4ycg93wxvmknvcd",
+  "blocks": [
+    "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70"
+  ]
+}

@@ -1,0 +1,64 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 gettransaction 398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+{
+  "amount": 0.00000000,
+  "fee": -0.00010000,
+  "confirmations": 1,
+  "blockhash": "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70",
+  "blockheight": 102,
+  "blockindex": 1,
+  "blocktime": 1791461047,
+  "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+  "wtxid": "2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b",
+  "walletconflicts": [
+  ],
+  "time": 1791461030,
+  "timereceived": 1791461030,
+  "bip125-replaceable": "no",
+  "details": [
+    {
+      "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw",
+      "category": "send",
+      "amount": -10.00000000,
+      "label": "destination",
+      "vout": 0,
+      "fee": -0.00010000,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks",
+      "category": "send",
+      "amount": -39.99990000,
+      "label": "change",
+      "vout": 1,
+      "fee": -0.00010000,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw",
+      "parent_descs": [
+        "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+      ],
+      "category": "receive",
+      "amount": 10.00000000,
+      "label": "destination",
+      "vout": 0,
+      "abandoned": false
+    },
+    {
+      "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks",
+      "parent_descs": [
+        "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+      ],
+      "category": "receive",
+      "amount": 39.99990000,
+      "label": "change",
+      "vout": 1,
+      "abandoned": false
+    }
+  ],
+  "hex": "020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000",
+  "lastprocessedblock": {
+    "hash": "221831e4f08c0abf7497fe766b7960615c89667391aab4777a34584db6efac70",
+    "height": 102
+  }
+}

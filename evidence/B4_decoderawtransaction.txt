@@ -1,0 +1,49 @@
+$ docker compose exec -T bitcoind bitcoin-cli -stdin decoderawtransaction  '020000000001019f5bc19f64e1703964b88fb9f0f3aa39cb084716c04c48cb26fa07b0fca44a3b0000000000fdffffff0200ca9a3b00000000160014ad297cc8886ed33d0670dfd43c281b29f8026f98f0006bee0000000016001453dd28846199a1fac74f33c591e0b4d350608b0e02473044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be0121026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f00000000'
+{
+  "txid": "398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911",
+  "hash": "2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b",
+  "version": 2,
+  "size": 222,
+  "vsize": 141,
+  "weight": 561,
+  "locktime": 0,
+  "vin": [
+    {
+      "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+      "vout": 0,
+      "scriptSig": {
+        "asm": "",
+        "hex": ""
+      },
+      "txinwitness": [
+        "3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be01",
+        "026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f"
+      ],
+      "sequence": 4294967293
+    }
+  ],
+  "vout": [
+    {
+      "value": 10.00000000,
+      "n": 0,
+      "scriptPubKey": {
+        "asm": "0 ad297cc8886ed33d0670dfd43c281b29f8026f98",
+        "desc": "addr(bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw)#6hx2ke6s",
+        "hex": "0014ad297cc8886ed33d0670dfd43c281b29f8026f98",
+        "address": "bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw",
+        "type": "witness_v0_keyhash"
+      }
+    },
+    {
+      "value": 39.99990000,
+      "n": 1,
+      "scriptPubKey": {
+        "asm": "0 53dd28846199a1fac74f33c591e0b4d350608b0e",
+        "desc": "addr(bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks)#x76pwk5m",
+        "hex": "001453dd28846199a1fac74f33c591e0b4d350608b0e",
+        "address": "bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks",
+        "type": "witness_v0_keyhash"
+      }
+    }
+  ]
+}

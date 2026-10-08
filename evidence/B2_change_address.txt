@@ -1,0 +1,2 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getnewaddress change
+bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks

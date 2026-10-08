@@ -1,0 +1,12 @@
+$ uv run pytest -v   # reference
+============================= test session starts ==============================
+platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/khusanjon/labs/OE_BLOCKCHAIN/Labs/lab-01-bitcoin-regtest/txparser
+configfile: pyproject.toml
+testpaths: tests
+collected 31 items
+
+tests/test_parser.py ...............................                     [100%]
+
+============================== 31 passed in 0.03s ==============================
+warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead

@@ -1,0 +1,12 @@
+$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalances
+{
+  "mine": {
+    "trusted": 50.00000000,
+    "untrusted_pending": 0.00000000,
+    "immature": 5000.00000000
+  },
+  "lastprocessedblock": {
+    "hash": "5c0399b62f6e5620d1ac333b8287864d155f2193ff70f3a5bad01673fc600179",
+    "height": 101
+  }
+}

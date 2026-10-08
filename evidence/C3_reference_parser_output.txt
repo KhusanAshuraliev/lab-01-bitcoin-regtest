@@ -1,0 +1,58 @@
+$ uv run python -m txparser <SIGNED_HEX>   # reference
+------------------------------------------------------------------------------
+TRANSACTION
+------------------------------------------------------------------------------
+  txid            : 398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+  wtxid           : 2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b
+  version         : 2
+  segwit          : True
+  locktime        : 0  (no timelock)
+  size            : 222 bytes
+  stripped size   : 113 bytes  (witness excluded)
+  weight          : 561 WU
+  virtual size    : 141 vbytes  (fee rates are quoted per vbyte)
+
+------------------------------------------------------------------------------
+INPUTS (1)
+------------------------------------------------------------------------------
+  [0] byte offset 7
+      prev txid     : 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+      prev vout     : 0
+      scriptSig     : 0 bytes
+      sequence      : 0xfffffffd  (RBF signalled, BIP-125)
+      witness       : 2 stack item(s)
+        [0] (71 B) 3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368edba7d84de3ebc27ada9a05af6be2e9bb89b89ae710df9b85be01
+        [1] (33 B) 026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f
+
+------------------------------------------------------------------------------
+OUTPUTS (2)
+------------------------------------------------------------------------------
+  [0] byte offset 49
+      value         : 10.00000000 BTC  (1000000000 sat)
+      type          : p2wpkh
+      address       : bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw   [regtest]
+      scriptPubKey  : 22 bytes
+                      OP_0
+                      <ad297cc8886ed33d0670dfd43c281b29f8026f98>
+
+  [1] byte offset 80
+      value         : 39.99990000 BTC  (3999990000 sat)
+      type          : p2wpkh
+      address       : bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks   [regtest]
+      scriptPubKey  : 22 bytes
+                      OP_0
+                      <53dd28846199a1fac74f33c591e0b4d350608b0e>
+
+------------------------------------------------------------------------------
+TOTALS
+------------------------------------------------------------------------------
+  sum of outputs  : 4999990000 sat
+
+  The FEE is not a field in this structure. It is
+      sum(inputs) - sum(outputs)
+  and the input values live in the outputs being spent, which are not
+  part of this transaction. To compute the fee you must look up each
+  previous output -- for example with:
+      bitcoin-cli gettxout <prev_txid> <prev_vout>
+------------------------------------------------------------------------------
+warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead

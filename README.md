@@ -3,6 +3,11 @@
 Byte-level parser for raw Bitcoin transactions, written for **OE Blockchain, Lab 01 (Bitcoin Core in regtest)**.
 Standard library only — no Bitcoin library is used anywhere.
 
+## Report
+
+- [Lab 01 report (PDF)](report/Lab01_Report_Khusan_Ashuraliev.pdf)
+- [`evidence/`](evidence/) — full command transcript, per-step outputs and `summary.json` from the lab run
+
 ## Usage
 
 ```bash

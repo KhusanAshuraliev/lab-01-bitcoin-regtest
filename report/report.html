@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Lab 01 — Bitcoin Core in Regtest · Khusan Ashuraliev</title>
+<title>Lab 01 — Bitcoin Core in Regtest · Khusanjon Ashuraliev</title>
 <style>
   @page { size: A4; margin: 18mm 17mm 18mm 17mm; }
   body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.2pt; line-height: 1.42; color: #1c1c1c; margin: 0; }
@@ -25,7 +25,7 @@
 <body>
 
 <h1>Lab 01 — Bitcoin Core in Regtest</h1>
-<div class="sub">UTXO state and raw transactions<br>Khusan Ashuraliev · Introduction to Blockchain Programming · Óbuda University, NIK · October 2026</div>
+<div class="sub">UTXO state and raw transactions<br>Khusanjon Ashuraliev · Introduction to Blockchain Programming · Óbuda University, NIK · October 2026</div>
 
 <table>
 <tr><th style="width:16%">Item</th><th>Value</th></tr>
@@ -35,10 +35,10 @@
 <tr><td>Reproduce</td><td><code>uv run python lab/run_lab.py --lab-dir &lt;OE_BLOCKCHAIN&gt;/Labs/lab-01-bitcoin-regtest</code></td></tr>
 <tr><td>Tests</td><td>Own parser: <b>91 passed</b> (the course suite of 31 tests + 60 own). Reference parser: <b>31 passed</b>.</td></tr>
 </table>
-<p class="small">All values below are copied from this run's evidence files. JSON arguments were passed to <code>bitcoin-cli</code> with <code>-stdin</code> to avoid shell quoting; otherwise the commands are exactly those of the lab README.</p>
+<p class="small">I copied all values below from the evidence files of my run. I passed JSON arguments to <code>bitcoin-cli</code> with <code>-stdin</code> to avoid shell quoting; otherwise I used exactly the commands of the lab README.</p>
 
 <h2>1. Setup and Part A — the UTXO state after mining</h2>
-<p>The setup created the descriptor wallet <code>lab01</code>, generated a mining address and mined 101 blocks to it (height 101). <code>getbalance</code> then reported <b>50.00000000</b> BTC.</p>
+<p>I started the node, created the descriptor wallet <code>lab01</code>, generated a mining address and mined 101 blocks to it (height 101). <code>getbalance</code> then reported <b>50.00000000</b> BTC.</p>
 
 <h3>Output of listunspent</h3>
 <pre class="keep">$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 listunspent
@@ -82,7 +82,7 @@
 </table>
 
 <h3>Amount computation (B3)</h3>
-<p>Input 50 BTC; payment 10 BTC; chosen fee 0.0001 BTC (10 000 sat). The fee is not written anywhere — it is whatever the outputs leave unclaimed — so the change output must absorb the rest:</p>
+<p>My input is 50 BTC, I send 10 BTC, and I chose a fee of 0.0001 BTC (10 000 sat). The fee is not written anywhere — it is whatever the outputs leave unclaimed — so the change output must absorb the rest:</p>
 <div class="note"><b>change = 50 − 10 − 0.0001 = 39.9999 BTC</b> &nbsp;→&nbsp; fee = Σinputs − Σoutputs = 50 − (10 + 39.9999) = <b>0.0001 BTC</b></div>
 <p><code>createrawtransaction</code> serialised one input and two outputs <code>{dest: 10.0}, {change: 39.9999}</code>; it performs no check of amounts against the input. <code>signrawtransactionwithwallet</code> returned <code>"complete": true</code> and a signed hex of <b>444</b> hex characters (222 bytes).</p>
 
@@ -99,7 +99,7 @@
 <p>The balance rose to 99.9999 BTC because both outputs (10 and 39.9999) went to my own wallet, and mining block 102 matured the block-2 coinbase (+50). The only value that left the wallet is the 0.0001 BTC fee, which — since I also mined block 102 — sits in a new immature coinbase and returns after 100 blocks.</p>
 
 <h2>3. Part C — my parser vs. decoderawtransaction</h2>
-<p>My parser (repository <code>lab-01-bitcoin-regtest</code>, standard library only) was run on the signed Part B hex. Full output:</p>
+<p>I ran my parser (repository <code>lab-01-bitcoin-regtest</code>, standard library only) on the signed Part B hex. This is the full output:</p>
 <pre>==============================================================================
 FIELD-BY-FIELD BREAKDOWN (offset = byte position in the serialised stream)
 ==============================================================================
@@ -196,12 +196,12 @@ FEE
 
 <h3>Where the two representations differ</h3>
 <p><b>The hashes.</b> The node labels the witness hash <code>hash</code>; my parser calls it <code>wtxid</code>. Both are double-SHA-256 values, but over different bytes: the txid is computed over the legacy serialisation <i>without</i> marker, flag and witness (113 bytes), the wtxid over the full 222 bytes. Because this is a SegWit transaction, they differ; for a legacy transaction they would be equal (tested on the genesis and block-170 transactions).</p>
-<p><b>Byte order.</b> Every hash is stored little-endian but displayed big-endian. The previous txid appears in the raw bytes at offset 7 as <code>9f5bc19f64e17039…b0fca44a3b</code>, which is the byte-reversed form of the displayed <code>3b4aa4fcb007fa26…649fc15b9f</code>. The same reversal is applied to the computed txid and wtxid before printing; without it, neither would match the node.</p>
+<p><b>Byte order.</b> Every hash is stored little-endian but displayed big-endian. The previous txid appears in the raw bytes at offset 7 as <code>9f5bc19f64e17039…b0fca44a3b</code>, which is the byte-reversed form of the displayed <code>3b4aa4fcb007fa26…649fc15b9f</code>. I apply the same reversal to the computed txid and wtxid before printing; without it, neither would match the node.</p>
 <p><b>Notation.</b> The node prints the sequence in decimal (4294967293), amounts in BTC, <code>OP_0</code> as <code>0</code> and uses Core's type names; my parser prints hex, satoshis, full opcode mnemonics and the lab's short type names. The underlying values are identical.</p>
 <div class="note"><b>Result:</b> my parser's txid equals the one returned by <code>sendrawtransaction</code>, and its wtxid equals the node's <code>hash</code> — for Part B and also for the Part D transaction (<code>1e083cb6…3f5a3ba3</code> / <code>c75065b9…82917f2a</code>).</div>
 
 <h3>Test suites</h3>
-<p>My implementation passes the course's reference test suite of 31 tests (genesis coinbase, block-170 payment, SegWit fixture, CompactSize, scripts, error handling) plus 60 own tests: p2sh and p2wsh classification with BIP-173 vectors, all CompactSize boundaries (0, 252, 253, 65 535, 65 536, 2<sup>32</sup>−1, 2<sup>32</sup>) at non-zero offsets, rejection of non-canonical and truncated encodings, first-input offsets 5 (legacy) and 7 (SegWit), and robustness against truncated input, trailing bytes and non-hex input — <b>91 passed</b>. The reference parser's own suite also ran: <b>31 passed</b>.</p>
+<p>My implementation passes the course's reference test suite of 31 tests (genesis coinbase, block-170 payment, SegWit fixture, CompactSize, scripts, error handling) plus 60 tests that I wrote myself: p2sh and p2wsh classification with BIP-173 vectors, all CompactSize boundaries (0, 252, 253, 65 535, 65 536, 2<sup>32</sup>−1, 2<sup>32</sup>) at non-zero offsets, rejection of non-canonical and truncated encodings, first-input offsets 5 (legacy) and 7 (SegWit), and robustness against truncated input, trailing bytes and non-hex input — <b>91 passed</b>. I also ran the reference parser's own suite: <b>31 passed</b>.</p>
 
 <h2>4. Part D — the deliberate mistake</h2>
 <p>I repeated Part B with the now-mature block-2 coinbase (<code>66477223…b4b86ea5:0</code>, 50 BTC) but with a single output of 10 BTC to <code>bcrt1qmm4drjz0…flhjwq</code> and <b>no change output</b>.</p>
@@ -214,7 +214,7 @@ FEE
 <tr><td>block tx[1] (mine)</td><td>one output of 10.00000000 BTC; block reports <code>"fee": 40.00000000</code>; vsize 110</td></tr>
 <tr><td>gettransaction</td><td><code>"fee": -40.00000000</code></td></tr>
 </table>
-<p>The first refusal is <b>not</b> a consensus rule. It is a safety limit in Bitcoin Core's RPC (<code>maxfeerate</code>, default 0.10 BTC/kvB). This transaction pays 40 BTC for 110 vB — about 36 million sat/vB, roughly 500 000 times the 71 sat/vB of Part B — so the RPC refuses it. Passing 0 disables the check, and the network accepted the transaction.</p>
+<p>The first refusal is <b>not</b> a consensus rule. It is a safety limit in Bitcoin Core's RPC (<code>maxfeerate</code>, default 0.10 BTC/kvB). This transaction pays 40 BTC for 110 vB — about 36 million sat/vB, roughly 500 000 times the 71 sat/vB of Part B — so the RPC refuses it. When I passed 0 to disable the check, the network accepted the transaction.</p>
 
 <h3>Who received the 40 BTC</h3>
 <p>The miner of block 103 — whoever was paid by that block's coinbase. The coinbase claims 90 BTC = 50 BTC subsidy + 40 BTC fee, paid to the address given to <code>-generate</code>, which is in my own wallet. The coins therefore return to me as an immature coinbase: after block 103, <code>getbalances</code> shows immature <b>5040.0001</b> BTC (100 × 50 + 40 + 0.0001, the last two being the Part D and Part B fees) and trusted <b>109.9999</b> BTC (3 mature coinbases × 50 − 40 − 0.0001). On mainnet the miner is an unrelated party and the 40 BTC would be lost.</p>
@@ -228,7 +228,7 @@ FEE
 <h2>5. Why Bitcoin has no explicit fee field</h2>
 <p>Bitcoin transactions carry no fee field because the fee is already fully determined by data the network holds. Every input points to an earlier output, and that output's value is fixed in the UTXO set; the transaction cannot change it. Every validating node therefore knows the sum of the inputs and reads the sum of the outputs, so fee = Σinputs − Σoutputs follows without any extra information. An explicit field would be redundant, and worse, it could contradict the implicit value. The protocol would then need one more consensus rule to say which number wins.</p>
 <p>The design buys simplicity in several places. Validation of value is a single inequality per transaction: Σinputs ≥ Σoutputs. The miner's reward needs no fee bookkeeping either: the coinbase may claim the block subsidy plus the sum of all remainders, which Part D showed as 50 + 40 = 90 BTC. Pricing is left entirely to the sender, who sets the fee rate (sat/vB) through the size of the remainder; a fee market emerges without the protocol fixing any price. Finally, every transaction is a few bytes smaller.</p>
-<p>The cost is that the fee is invisible and easy to get wrong. A sender who forgets the change output does not get an error from consensus; the transaction is valid, and the whole remainder goes to the miner, exactly as in Part D, where 40 BTC was lost to a fee. The fee also cannot be read from the transaction alone: our Part C parser has to refuse to print it, because the input values live in other transactions. This is why wallets and Bitcoin Core add guard rails outside consensus, such as the <code>maxfeerate</code> check that rejected Part D with error −25.</p>
+<p>The cost is that the fee is invisible and easy to get wrong. A sender who forgets the change output does not get an error from consensus; the transaction is valid, and the whole remainder goes to the miner, exactly as in Part D, where 40 BTC was lost to a fee. The fee also cannot be read from the transaction alone: my Part C parser has to refuse to print it, because the input values live in other transactions. This is why wallets and Bitcoin Core add guard rails outside consensus, such as the <code>maxfeerate</code> check that rejected Part D with error −25.</p>
 <p class="small">(288 words)</p>
 
 </body>

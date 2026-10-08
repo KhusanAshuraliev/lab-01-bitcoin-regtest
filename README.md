@@ -5,7 +5,7 @@ I used the standard library only — I do not use any Bitcoin library anywhere.
 
 ## Report
 
-- [My Lab 01 report (PDF)](report/Lab01_Report_Khusan_Ashuraliev.pdf)
+- [My Lab 01 report (PDF)](report/Lab01_Report_Khusanjon_Ashuraliev.pdf)
 - [`evidence/`](evidence/) — the full command transcript, per-step outputs and `summary.json` from my lab run
 
 ## Usage

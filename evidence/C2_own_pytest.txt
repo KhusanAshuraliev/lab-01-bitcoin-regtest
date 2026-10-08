@@ -1,8 +1,8 @@
 $ python -m pytest -v   # own implementation
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0 -- /Users/khusanjon/labs/btc-txparser/.venv/bin/python3
+platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0 -- ~/labs/btc-txparser/.venv/bin/python3
 cachedir: .pytest_cache
-rootdir: /Users/khusanjon/labs/btc-txparser
+rootdir: ~/labs/btc-txparser
 configfile: pyproject.toml
 testpaths: tests
 collecting ... collected 91 items

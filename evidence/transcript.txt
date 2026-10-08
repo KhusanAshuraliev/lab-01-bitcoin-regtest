@@ -601,9 +601,9 @@ $ python -m txparser --json <SIGNED_HEX>
 
 $ python -m pytest -v   # own implementation
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0 -- /Users/khusanjon/labs/btc-txparser/.venv/bin/python3
+platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0 -- ~/labs/btc-txparser/.venv/bin/python3
 cachedir: .pytest_cache
-rootdir: /Users/khusanjon/labs/btc-txparser
+rootdir: ~/labs/btc-txparser
 configfile: pyproject.toml
 testpaths: tests
 collecting ... collected 91 items
@@ -703,7 +703,7 @@ tests/test_parser.py::test_non_hex_input_is_rejected PASSED              [100%]
 ============================== 91 passed in 0.04s ==============================
 
 $ uv sync
-warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+warning: `VIRTUAL_ENV=~/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
 Using CPython 3.12.0 interpreter at: /Library/Frameworks/Python.framework/Versions/3.12/bin/python3
 Creating virtual environment at: .venv
 Resolved 8 packages in 0.70ms
@@ -775,12 +775,12 @@ TOTALS
   previous output -- for example with:
       bitcoin-cli gettxout <prev_txid> <prev_vout>
 ------------------------------------------------------------------------------
-warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+warning: `VIRTUAL_ENV=~/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
 
 $ uv run pytest -v   # reference
 ============================= test session starts ==============================
 platform darwin -- Python 3.12.0, pytest-9.1.1, pluggy-1.6.0
-rootdir: /Users/khusanjon/labs/OE_BLOCKCHAIN/Labs/lab-01-bitcoin-regtest/txparser
+rootdir: ~/labs/OE_BLOCKCHAIN/Labs/lab-01-bitcoin-regtest/txparser
 configfile: pyproject.toml
 testpaths: tests
 collected 31 items
@@ -788,7 +788,7 @@ collected 31 items
 tests/test_parser.py ...............................                     [100%]
 
 ============================== 31 passed in 0.03s ==============================
-warning: `VIRTUAL_ENV=/Users/khusanjon/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+warning: `VIRTUAL_ENV=~/labs/btc-txparser/.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
 
 # automatic comparison with the node:
 {
@@ -1056,4 +1056,4 @@ $ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 getbalances
   }
 }
 
-Evidence written to: /Users/khusanjon/labs/btc-txparser/evidence
+Evidence written to: ~/labs/btc-txparser/evidence

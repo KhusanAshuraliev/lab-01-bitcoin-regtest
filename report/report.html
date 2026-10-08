@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lab 01 — Bitcoin Core in Regtest · Khusan Ashuraliev</title>
+<style>
+  @page { size: A4; margin: 18mm 17mm 18mm 17mm; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 10.2pt; line-height: 1.42; color: #1c1c1c; margin: 0; }
+  h1 { font-size: 21pt; margin: 0 0 2pt; }
+  h2 { font-size: 14pt; margin: 18pt 0 5pt; break-after: avoid; }
+  h3 { font-size: 11pt; margin: 12pt 0 3pt; break-after: avoid; }
+  p { margin: 0 0 7pt; }
+  .sub { color: #555; margin-bottom: 9pt; }
+  table { border-collapse: collapse; width: 100%; margin: 5pt 0 9pt; font-size: 9.2pt; break-inside: avoid; }
+  th { text-align: left; background: #f1f3f5; border-bottom: 1.2pt solid #333; padding: 3pt 6pt; }
+  td { border-bottom: 0.6pt solid #d5d8dc; padding: 3pt 6pt; vertical-align: top; }
+  code, pre { font-family: Menlo, Consolas, monospace; }
+  code { font-size: 8.8pt; word-break: break-all; }
+  pre { font-size: 6.9pt; line-height: 1.28; background: #f6f7f8; border: 0.6pt solid #d5d8dc; padding: 6pt 8pt; margin: 4pt 0 9pt; white-space: pre-wrap; word-break: break-all; }
+  pre.keep { break-inside: avoid; }
+  .note { background: #f6f7f8; border: 0.6pt solid #d5d8dc; padding: 5pt 8pt; margin: 5pt 0 9pt; break-inside: avoid; }
+  .small { font-size: 8.6pt; color: #555; }
+</style>
+</head>
+<body>
+
+<h1>Lab 01 — Bitcoin Core in Regtest</h1>
+<div class="sub">UTXO state and raw transactions<br>Khusan Ashuraliev · Introduction to Blockchain Programming · Óbuda University, NIK · October 2026</div>
+
+<table>
+<tr><th style="width:16%">Item</th><th>Value</th></tr>
+<tr><td>Repository</td><td><code>https://github.com/KhusanAshuraliev/lab-01-bitcoin-regtest</code></td></tr>
+<tr><td>Node</td><td>Bitcoin Core <code>/Satoshi:27.1.0/</code> (image <code>lncm/bitcoind:v27.1</code>), regtest, Docker on macOS</td></tr>
+<tr><td>Evidence</td><td>Every command and its full output: <code>evidence/transcript.txt</code>; one file per step and <code>evidence/summary.json</code> in the repository</td></tr>
+<tr><td>Reproduce</td><td><code>uv run python lab/run_lab.py --lab-dir &lt;OE_BLOCKCHAIN&gt;/Labs/lab-01-bitcoin-regtest</code></td></tr>
+<tr><td>Tests</td><td>Own parser: <b>91 passed</b> (the course suite of 31 tests + 60 own). Reference parser: <b>31 passed</b>.</td></tr>
+</table>
+<p class="small">All values below are copied from this run's evidence files. JSON arguments were passed to <code>bitcoin-cli</code> with <code>-stdin</code> to avoid shell quoting; otherwise the commands are exactly those of the lab README.</p>
+
+<h2>1. Setup and Part A — the UTXO state after mining</h2>
+<p>The setup created the descriptor wallet <code>lab01</code>, generated a mining address and mined 101 blocks to it (height 101). <code>getbalance</code> then reported <b>50.00000000</b> BTC.</p>
+
+<h3>Output of listunspent</h3>
+<pre class="keep">$ docker compose exec -T bitcoind bitcoin-cli -rpcwallet=lab01 listunspent
+[
+  {
+    "txid": "3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f",
+    "vout": 0,
+    "address": "bcrt1ql8q39jdahzr6mr4tzkzvgqk5cdps9f9ltn47xk",
+    "label": "",
+    "scriptPubKey": "0014f9c112c9bdb887ad8eab1584c402d4c34302a4bf",
+    "amount": 50.00000000,
+    "confirmations": 101,
+    "spendable": true,
+    "solvable": true,
+    "desc": "wpkh([0890d39b/84h/1h/0h/0/1]026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f)#s3n7yq7w",
+    "parent_descs": [
+      "wpkh(tpubD6NzVbkrYhZ4WzfKfEPtmXVyBpNa8Fr2y7j8ux68JnTwyGq4fDirSRKX6gu5po5XVDjn1aCU1U6N6uo4kiKNSaJydWsv9f2ZJx1uiWLZb2m/84h/1h/0h/0/*)#larsdd72"
+    ],
+    "safe": true
+  }
+]</pre>
+
+<table>
+<tr><th style="width:17%">Command</th><th>Result</th><th style="width:25%">README expects</th></tr>
+<tr><td>listunspent</td><td>1 entry — txid <code>3b4aa4fc…9fc15b9f</code>, vout 0, 50 BTC, 101 confirmations, spendable</td><td>1 entry, 50, 101, spendable ✓</td></tr>
+<tr><td>getbalances</td><td>trusted <b>50.00000000</b>, immature <b>5000.00000000</b>, untrusted_pending 0</td><td>50 / 5000 ✓</td></tr>
+<tr><td>gettxoutsetinfo</td><td>height 101, <b>txouts 101</b>, transactions 101, total_amount <b>5050.00000000</b></td><td>101 / 101 / 5050 ✓</td></tr>
+</table>
+
+<h3>Why 100 of the 101 mined outputs are unspendable</h3>
+<p>Each of the 101 blocks has a coinbase transaction paying the 50 BTC subsidy to my mining address, so 101 outputs worth 5 050 BTC exist. Consensus forbids spending a coinbase output until it has <b>100 confirmations on top of it</b> (COINBASE_MATURITY). At height 101 only the block-1 coinbase satisfies this (it has 101 confirmations); the coinbases of blocks 2–101 have between 100 and 1 confirmations and are <i>immature</i>. The rule exists because a chain reorganisation removes the coinbase of an orphaned block: without a maturity delay, coins that later vanish could already have been spent onward, and every descendant transaction would become invalid.</p>
+<p>The wallet and the node look at the same data from two angles. <code>listunspent</code> lists only outputs the wallet can spend <i>now</i>, and never includes immature coinbase outputs, which is why it shows one entry; <code>getbalances</code> reports the other 100 × 50 = 5 000 BTC under <i>immature</i>. <code>gettxoutsetinfo</code> is the node's view of the whole UTXO set, independent of any wallet: it counts every unspent output regardless of owner or maturity, hence <b>101</b> outputs and 5 050 BTC. Both views agree that 101 coinbase outputs of 50 BTC exist and one is mature. The count is 101 and not 202 because each regtest coinbase also has a zero-value <code>OP_RETURN</code> witness-commitment output, which is provably unspendable and therefore never added to the UTXO set.</p>
+<div class="note">This also shows that a balance is a <b>derived</b> quantity: 50 BTC is the sum the wallet computes over its spendable UTXOs; no account balance is stored anywhere in the protocol.</div>
+
+<h2>2. Part B — a raw transaction built by hand</h2>
+<table>
+<tr><th style="width:24%">Step</th><th>Value</th></tr>
+<tr><td>B1 input (listunspent 100)</td><td>txid <code>3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f</code>, vout 0, 50 BTC</td></tr>
+<tr><td>B2 destination</td><td><code>bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw</code></td></tr>
+<tr><td>B2 change</td><td><code>bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks</code></td></tr>
+</table>
+
+<h3>Amount computation (B3)</h3>
+<p>Input 50 BTC; payment 10 BTC; chosen fee 0.0001 BTC (10 000 sat). The fee is not written anywhere — it is whatever the outputs leave unclaimed — so the change output must absorb the rest:</p>
+<div class="note"><b>change = 50 − 10 − 0.0001 = 39.9999 BTC</b> &nbsp;→&nbsp; fee = Σinputs − Σoutputs = 50 − (10 + 39.9999) = <b>0.0001 BTC</b></div>
+<p><code>createrawtransaction</code> serialised one input and two outputs <code>{dest: 10.0}, {change: 39.9999}</code>; it performs no check of amounts against the input. <code>signrawtransactionwithwallet</code> returned <code>"complete": true</code> and a signed hex of <b>444</b> hex characters (222 bytes).</p>
+
+<h3>Result</h3>
+<table>
+<tr><th style="width:22%">Check</th><th>Observed</th><th style="width:20%">Expected</th></tr>
+<tr><td>decoderawtransaction</td><td>outputs 10.00000000 and 39.99990000; size <b>222</b>, vsize <b>141</b>, weight <b>561</b>; txid ≠ hash (SegWit)</td><td>222 / 141 / 561 ✓</td></tr>
+<tr><td>sendrawtransaction</td><td>txid <code>398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911</code></td><td>—</td></tr>
+<tr><td>getrawmempool</td><td>txid listed before mining; empty after <code>-generate 1</code> (block 102)</td><td>✓</td></tr>
+<tr><td>gettransaction</td><td><code>"fee": -0.00010000</code>, <code>"confirmations": 1</code>, block height 102</td><td>−0.0001, 1 ✓</td></tr>
+<tr><td>getbalance</td><td><b>99.99990000</b></td><td>≈ 99.9999 ✓</td></tr>
+</table>
+<p><b>The node's fee equals my hand computation exactly</b>: |−0.00010000| = 0.0001 BTC = 10 000 sat. The sign is negative because the wallet reports the fee from my point of view, as value paid away. The effective fee rate is <b>10 000 sat / 141 vB ≈ 70.9 sat/vB</b>.</p>
+<p>The balance rose to 99.9999 BTC because both outputs (10 and 39.9999) went to my own wallet, and mining block 102 matured the block-2 coinbase (+50). The only value that left the wallet is the 0.0001 BTC fee, which — since I also mined block 102 — sits in a new immature coinbase and returns after 100 blocks.</p>
+
+<h2>3. Part C — my parser vs. decoderawtransaction</h2>
+<p>My parser (repository <code>lab-01-bitcoin-regtest</code>, standard library only) was run on the signed Part B hex. Full output:</p>
+<pre>==============================================================================
+FIELD-BY-FIELD BREAKDOWN (offset = byte position in the serialised stream)
+==============================================================================
+offset   len  field                              value
+------------------------------------------------------------------------------
+     0     4  version                            2
+     4     1  marker                             00
+     5     1  flag                               0x01
+     6     1  input count                        1
+     7    32  input[0].prev_txid                 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+    39     4  input[0].prev_vout                 0
+    43     1  input[0].scriptSig length          0
+    44     0  input[0].scriptSig                 
+    44     4  input[0].sequence                  0xfffffffd
+    48     1  output count                       2
+    49     8  output[0].value                    1000000000 sat
+    57     1  output[0].scriptPubKey length      22
+    58    22  output[0].scriptPubKey             0014ad297cc8886ed33d0670dfd43c281b29f8026f98
+    80     8  output[1].value                    3999990000 sat
+    88     1  output[1].scriptPubKey length      22
+    89    22  output[1].scriptPubKey             001453dd28846199a1fac74f33c591e0b4d350608b0e
+   111     1  witness[0] item count              2
+   112     1  witness[0][0] length               71
+   113    71  witness[0][0]                      3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86... (71 bytes)
+   184     1  witness[0][1] length               33
+   185    33  witness[0][1]                      026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f... (33 bytes)
+   218     4  locktime                           0
+
+==============================================================================
+SUMMARY
+==============================================================================
+txid          : 398120acae03181b6cf8517f34f98ae9733af4bac8f6e24e5cba02e1557ec911
+wtxid         : 2bd2d821533dcb5f7937015b9b92d813fe901840b1420dca7007e8a7f118079b
+version       : 2
+segwit        : True  (marker 0x00, flag 0x01 at offsets 4-5)
+locktime      : 0  (none)
+size          : 222 bytes
+stripped size : 113 bytes
+weight        : 561 WU  (= 3 x 113 + 222)
+vsize         : 141 vB
+
+INPUTS (1)
+  [0] at offset 7
+      prev txid : 3b4aa4fcb007fa26cb484cc0164708cb39aaf3f0b98fb8643970e1649fc15b9f
+      prev vout : 0
+      scriptSig : (empty)
+      sequence  : 0xfffffffd  (RBF signalled, BIP-125)
+      witness   : 2 item(s)
+        [0]  71 bytes  DER signature, sighash 0x01 (SIGHASH_ALL)
+            3044022034325a3fbb4d9b0f889d053e61ef46b7ac1161878544b8f5c44c2e86b8f345ce022068fff26ec5368e... (71 bytes)
+        [1]  33 bytes  compressed public key
+            026ebd344d011c1de4835bb1c56fd295447e363c551fdb110bca2edab558f63f0f
+
+OUTPUTS (2)
+  [0] at offset 49
+      value        : 10.00000000 BTC (1000000000 sat)
+      scriptPubKey : 0014ad297cc8886ed33d0670dfd43c281b29f8026f98
+      asm          : OP_0 &lt;ad297cc8886ed33d0670dfd43c281b29f8026f98&gt;
+      type         : p2wpkh
+      address      : bcrt1q455hejygdmfn6pnsml2rc2qm98uqymuc9fejjw
+  [1] at offset 80
+      value        : 39.99990000 BTC (3999990000 sat)
+      scriptPubKey : 001453dd28846199a1fac74f33c591e0b4d350608b0e
+      asm          : OP_0 &lt;53dd28846199a1fac74f33c591e0b4d350608b0e&gt;
+      type         : p2wpkh
+      address      : bcrt1q20wj3prpnxsl4360x0zerc956dgxpzcwh78kks
+  total output : 4999990000 sat
+
+FEE
+  not computable from this transaction alone. Bitcoin has no fee field:
+  fee = sum(input values) - sum(output values), and input values are not
+  serialised here -- each lives in the output being spent (prev txid:vout).
+  Looking those up requires a node or UTXO set.</pre>
+
+<h3>Side-by-side comparison</h3>
+<table>
+<tr><th style="width:19%">Field</th><th style="width:33%">decoderawtransaction (node)</th><th>My parser</th><th style="width:4%"></th></tr>
+<tr><td>txid</td><td><code>398120ac…557ec911</code></td><td><code>398120ac…557ec911</code></td><td>=</td></tr>
+<tr><td>wtxid</td><td><code>hash: 2bd2d821…f118079b</code></td><td><code>wtxid: 2bd2d821…f118079b</code></td><td>=</td></tr>
+<tr><td>version / locktime</td><td>2 / 0</td><td>2 / 0</td><td>=</td></tr>
+<tr><td>size / vsize / weight</td><td>222 / 141 / 561</td><td>222 / 141 / 561</td><td>=</td></tr>
+<tr><td>stripped size</td><td>not shown</td><td>113 (561 = 3 × 113 + 222)</td><td>+</td></tr>
+<tr><td>SegWit marker/flag</td><td>implicit</td><td>0x00 / 0x01 at offsets 4–5</td><td>+</td></tr>
+<tr><td>input[0] prev txid</td><td><code>3b4aa4fc…9fc15b9f</code>, vout 0</td><td>same, at offset 7</td><td>=</td></tr>
+<tr><td>sequence</td><td>4294967293 (decimal)</td><td>0xfffffffd (hex, RBF signalled)</td><td>≈</td></tr>
+<tr><td>witness</td><td>2 items, hex only</td><td>71-byte DER sig ending 01 (SIGHASH_ALL), 33-byte key 02…</td><td>=</td></tr>
+<tr><td>output scripts</td><td><code>0 ad297cc8…</code>, type <code>witness_v0_keyhash</code></td><td><code>OP_0 &lt;ad297cc8…&gt;</code>, type p2wpkh</td><td>≈</td></tr>
+<tr><td>output values</td><td>10.00000000 / 39.99990000 BTC</td><td>1 000 000 000 / 3 999 990 000 sat</td><td>≈</td></tr>
+<tr><td>addresses</td><td><code>bcrt1q455hej…</code>, <code>bcrt1q20wj3p…</code></td><td>identical (own Bech32 encoder)</td><td>=</td></tr>
+<tr><td>byte offsets</td><td>not shown</td><td>every field</td><td>+</td></tr>
+<tr><td>fee</td><td>not shown</td><td>explicitly not computable</td><td>=</td></tr>
+</table>
+<p class="small">= identical · ≈ same value, different representation · + only my parser shows it</p>
+
+<h3>Where the two representations differ</h3>
+<p><b>The hashes.</b> The node labels the witness hash <code>hash</code>; my parser calls it <code>wtxid</code>. Both are double-SHA-256 values, but over different bytes: the txid is computed over the legacy serialisation <i>without</i> marker, flag and witness (113 bytes), the wtxid over the full 222 bytes. Because this is a SegWit transaction, they differ; for a legacy transaction they would be equal (tested on the genesis and block-170 transactions).</p>
+<p><b>Byte order.</b> Every hash is stored little-endian but displayed big-endian. The previous txid appears in the raw bytes at offset 7 as <code>9f5bc19f64e17039…b0fca44a3b</code>, which is the byte-reversed form of the displayed <code>3b4aa4fcb007fa26…649fc15b9f</code>. The same reversal is applied to the computed txid and wtxid before printing; without it, neither would match the node.</p>
+<p><b>Notation.</b> The node prints the sequence in decimal (4294967293), amounts in BTC, <code>OP_0</code> as <code>0</code> and uses Core's type names; my parser prints hex, satoshis, full opcode mnemonics and the lab's short type names. The underlying values are identical.</p>
+<div class="note"><b>Result:</b> my parser's txid equals the one returned by <code>sendrawtransaction</code>, and its wtxid equals the node's <code>hash</code> — for Part B and also for the Part D transaction (<code>1e083cb6…3f5a3ba3</code> / <code>c75065b9…82917f2a</code>).</div>
+
+<h3>Test suites</h3>
+<p>My implementation passes the course's reference test suite of 31 tests (genesis coinbase, block-170 payment, SegWit fixture, CompactSize, scripts, error handling) plus 60 own tests: p2sh and p2wsh classification with BIP-173 vectors, all CompactSize boundaries (0, 252, 253, 65 535, 65 536, 2<sup>32</sup>−1, 2<sup>32</sup>) at non-zero offsets, rejection of non-canonical and truncated encodings, first-input offsets 5 (legacy) and 7 (SegWit), and robustness against truncated input, trailing bytes and non-hex input — <b>91 passed</b>. The reference parser's own suite also ran: <b>31 passed</b>.</p>
+
+<h2>4. Part D — the deliberate mistake</h2>
+<p>I repeated Part B with the now-mature block-2 coinbase (<code>66477223…b4b86ea5:0</code>, 50 BTC) but with a single output of 10 BTC to <code>bcrt1qmm4drjz0…flhjwq</code> and <b>no change output</b>.</p>
+<table>
+<tr><th style="width:24%">Step</th><th>Observed</th></tr>
+<tr><td>1st sendrawtransaction</td><td><code>error code: -25</code> — <code>Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)</code></td></tr>
+<tr><td>2nd, maxfeerate 0</td><td>accepted, txid <code>1e083cb63b9c64838d379b047a87c53420c13a7e9a76e9fadc1b27893f5a3ba3</code></td></tr>
+<tr><td>-generate 1</td><td>block 103, hash <code>55a067a9…b8c1030b</code>, 2 transactions</td></tr>
+<tr><td>block tx[0] (coinbase)</td><td>vout[0] = <b>90.00000000</b> → <code>bcrt1q88el447z…c23l87r</code> (my mining address); vout[1] = 0.00000000, OP_RETURN witness commitment</td></tr>
+<tr><td>block tx[1] (mine)</td><td>one output of 10.00000000 BTC; block reports <code>"fee": 40.00000000</code>; vsize 110</td></tr>
+<tr><td>gettransaction</td><td><code>"fee": -40.00000000</code></td></tr>
+</table>
+<p>The first refusal is <b>not</b> a consensus rule. It is a safety limit in Bitcoin Core's RPC (<code>maxfeerate</code>, default 0.10 BTC/kvB). This transaction pays 40 BTC for 110 vB — about 36 million sat/vB, roughly 500 000 times the 71 sat/vB of Part B — so the RPC refuses it. Passing 0 disables the check, and the network accepted the transaction.</p>
+
+<h3>Who received the 40 BTC</h3>
+<p>The miner of block 103 — whoever was paid by that block's coinbase. The coinbase claims 90 BTC = 50 BTC subsidy + 40 BTC fee, paid to the address given to <code>-generate</code>, which is in my own wallet. The coins therefore return to me as an immature coinbase: after block 103, <code>getbalances</code> shows immature <b>5040.0001</b> BTC (100 × 50 + 40 + 0.0001, the last two being the Part D and Part B fees) and trusted <b>109.9999</b> BTC (3 mature coinbases × 50 − 40 − 0.0001). On mainnet the miner is an unrelated party and the 40 BTC would be lost.</p>
+
+<h3>Why the transaction was consensus-valid</h3>
+<p>Consensus checks value with two inequalities: for each transaction Σinputs ≥ Σoutputs (50 ≥ 10), and for each block the coinbase may claim no more than subsidy + Σfees (90 ≤ 50 + 40). Both hold. Nothing in consensus limits how large the difference may be, because the protocol cannot know whether a large remainder is a mistake or an intentional payment to the miner. The signature committed to exactly these outputs, so the transaction is valid as signed.</p>
+
+<h3>Why Ethereum's account model makes this error impossible</h3>
+<p>Ethereum's state is a mapping from accounts to balances, and a transaction is a state transition rather than the consumption of whole outputs. For a simple transfer the transition function does <code>balance[sender] −= value + gas_used × gas_price</code> and <code>balance[recipient] += value</code>. The sender states only the amount to move; everything not moved simply <i>stays</i> in the sender's account. There is no set of outputs that must be balanced against the inputs, so there is no remainder that can be forgotten. The fee is not implicit either: it is derived from explicit, signed fields and bounded in advance by <code>gasLimit × maxFeePerGas</code> (unused gas is refunded), so the sender can never pay more than that cap. In Bitcoin's UTXO model an input is consumed whole and anything not re-assigned to an output becomes the fee; in Ethereum, anything not transferred remains the sender's balance.</p>
+
+<h2>5. Why Bitcoin has no explicit fee field</h2>
+<p>Bitcoin transactions carry no fee field because the fee is already fully determined by data the network holds. Every input points to an earlier output, and that output's value is fixed in the UTXO set; the transaction cannot change it. Every validating node therefore knows the sum of the inputs and reads the sum of the outputs, so fee = Σinputs − Σoutputs follows without any extra information. An explicit field would be redundant, and worse, it could contradict the implicit value. The protocol would then need one more consensus rule to say which number wins.</p>
+<p>The design buys simplicity in several places. Validation of value is a single inequality per transaction: Σinputs ≥ Σoutputs. The miner's reward needs no fee bookkeeping either: the coinbase may claim the block subsidy plus the sum of all remainders, which Part D showed as 50 + 40 = 90 BTC. Pricing is left entirely to the sender, who sets the fee rate (sat/vB) through the size of the remainder; a fee market emerges without the protocol fixing any price. Finally, every transaction is a few bytes smaller.</p>
+<p>The cost is that the fee is invisible and easy to get wrong. A sender who forgets the change output does not get an error from consensus; the transaction is valid, and the whole remainder goes to the miner, exactly as in Part D, where 40 BTC was lost to a fee. The fee also cannot be read from the transaction alone: our Part C parser has to refuse to print it, because the input values live in other transactions. This is why wallets and Bitcoin Core add guard rails outside consensus, such as the <code>maxfeerate</code> check that rejected Part D with error −25.</p>
+<p class="small">(288 words)</p>
+
+</body>
+</html>

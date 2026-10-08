@@ -1,4 +1,4 @@
-# btc-txparser — Lab 01 student implementation
+# lab-01-bitcoin-regtest — Lab 01 student implementation
 
 Byte-level parser for raw Bitcoin transactions, written for **OE Blockchain, Lab 01 (Bitcoin Core in regtest)**.
 Standard library only — no Bitcoin library is used anywhere.
